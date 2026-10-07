@@ -13,6 +13,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Bypass-Tunnel-Reminder', 'X-Requested-With']
 }));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
 app.use(express.static(path.join(__dirname)));
 
 app.get('/api/health', (req, res) => {
