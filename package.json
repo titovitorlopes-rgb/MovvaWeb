@@ -1,0 +1,21 @@
+{
+  "name": "acharcliente",
+  "version": "1.0.0",
+  "description": "MovveFind - Coletor de Empresas Sem Site Oficial",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "leads",
+    "google-maps",
+    "prospects",
+    "crm"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

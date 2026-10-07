@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovveFind | Empresas Reais Sem Site (Telefone, Instagram & Fechamento)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="192x192" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Branded Fast Loading Screen with MovveFind Logo -->
+  <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" hidden>
+    <div class="loading-card">
+      <img src="logo-transparent.png" alt="Logo MovveFind" class="loading-logo" width="90" height="39">
+      <h2 class="loading-title">MovveFind Buscando Clientes...</h2>
+      <p id="loading-step-text" class="loading-step">Varrendo empresas reais no Google Maps sem site oficial...</p>
+      <div class="loading-bar-track">
+        <div id="loading-progress-bar" class="loading-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-group">
+        <img src="logo-transparent.png" alt="MovveFind Logo" class="brand-logo" width="56" height="24">
+        <div class="brand-title-wrap">
+          <h1>Movve<span class="brand-accent">Find</span></h1>
+          <p class="brand-subtitle">Empresas Reais Sem Site • Telefone para Copiar • Instagram • Sempre Ativas</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div id="cloud-status-badge" class="cloud-status-badge" title="Clique para detalhes da hospedagem na nuvem">
+          <span class="status-indicator-dot"></span>
+          <span id="cloud-status-text">Verificando Nuvem...</span>
+        </div>
+        <button type="button" id="btn-cloud-settings" class="btn btn-secondary btn-sm" title="Hospedar na nuvem sem precisar do PC ligado">
+          ⚙️ Servidor / Nuvem
+        </button>
+        <button type="button" id="export-csv-btn" class="btn btn-secondary btn-sm">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Baixar Planilha (CSV)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="workbench-container">
+    <div class="control-deck">
+      <!-- Passo 1: Busca Completa -->
+      <section class="panel" aria-labelledby="search-panel-title">
+        <div class="panel-header">
+          <h2 id="search-panel-title">1. Onde Buscar Clientes Sem Site</h2>
+          <span class="panel-badge">Pesquisa Completa</span>
+        </div>
+
+        <search>
+          <form id="prospect-search-form" action="#results" method="GET" novalidate>
+            <div class="search-form-grid">
+              <div class="form-group form-group-full">
+                <fieldset class="country-fieldset">
+                  <legend>Escolha o País</legend>
+                  <div class="country-options">
+                    <label class="country-radio-label" for="country-br">
+                      <input type="radio" id="country-br" name="country" value="BR" checked>
+                      <span>🇧🇷 Brasil (WhatsApp &amp; Telefone)</span>
+                    </label>
+                    <label class="country-radio-label" for="country-us">
+                      <input type="radio" id="country-us" name="country" value="US">
+                      <span>🇺🇸 EUA (Apenas Sem Site • Telefone &amp; Instagram)</span>
+                    </label>
+                  </div>
+                </fieldset>
+              </div>
+
+              <div class="form-group">
+                <label for="city-input">Cidade ou Região</label>
+                <input
+                  type="text"
+                  id="city-input"
+                  name="city"
+                  list="cities-datalist"
+                  value="Curitiba, PR"
+                  placeholder="Ex: Curitiba, PR ou País Todo"
+                  required
+                >
+                <datalist id="cities-datalist"></datalist>
+              </div>
+
+              <div class="form-group">
+                <label for="niche-input">Ramo / Nicho</label>
+                <input
+                  type="text"
+                  id="niche-input"
+                  name="niche"
+                  list="niches-datalist"
+                  value="Oficina Mecânica"
+                  placeholder="Ex: Oficina Mecânica ou Todos os Nichos"
+                  required
+                >
+                <datalist id="niches-datalist"></datalist>
+              </div>
+
+              <div class="form-group form-group-full">
+                <span class="field-hint">Atalhos rápidos (clique para aplicar):</span>
+                <div id="quick-niche-chips" class="quick-presets"></div>
+              </div>
+
+              <div class="form-group form-group-full search-submit-row">
+                <button type="submit" id="search-submit-btn" class="btn btn-primary">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.3-4.3"/>
+                  </svg>
+                  Buscar Empresas Sem Site Agora
+                </button>
+              </div>
+            </div>
+          </form>
+        </search>
+      </section>
+
+      <!-- Passo 2: Mensagem / Script Pronta -->
+      <section class="panel" aria-labelledby="script-panel-title">
+        <div class="panel-header">
+          <h2 id="script-panel-title">2. Sua Proposta (Pronta no Clique)</h2>
+          <span class="panel-badge">Alta Conversão</span>
+        </div>
+
+        <div class="script-toolbar">
+          <div class="form-group">
+            <label for="template-select">Modelo de proposta / Roteiro</label>
+            <select id="template-select" name="template_model">
+              <option value="pt_direta">🇧🇷 Brasil: Proposta Direta no WhatsApp</option>
+              <option value="pt_diagnostico">🇧🇷 Brasil: Oferecer Prévia do Site</option>
+              <option value="pt_urgencia">🇧🇷 Brasil: Destaque no Google Maps</option>
+              <option value="en_direct">🇺🇸 EUA: Direct Website Proposal</option>
+              <option value="en_phone_call">🇺🇸 EUA: Roteiro de Ligação / Cold Call Script</option>
+              <option value="en_mockup">🇺🇸 EUA: Free 60-Second Preview Offer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="sender-name-input">Seu Nome / Agência</label>
+            <input
+              type="text"
+              id="sender-name-input"
+              name="sender_name"
+              value="Bernardo"
+              placeholder="Seu nome"
+            >
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-block-end: 0.75rem;">
+          <label for="script-subject-input">Assunto da Proposta</label>
+          <input type="text" id="script-subject-input" name="script_subject">
+        </div>
+
+        <div class="form-group">
+          <label for="script-body-textarea">Texto da Proposta (substitui dados da empresa automaticamente)</label>
+          <textarea id="script-body-textarea" name="script_body" rows="4"></textarea>
+        </div>
+      </section>
+    </div>
+
+    <!-- Lista de Clientes -->
+    <section id="results" class="results-section" aria-labelledby="results-heading">
+      <div class="results-CommandBar">
+        <div class="results-summary">
+          <h2 id="results-heading">Empresas Sem Site Encontradas</h2>
+          <p id="results-meta" class="results-meta">Mostrando empresas ativas sem site comercial oficial.</p>
+        </div>
+
+        <div class="filter-tabs" role="group" aria-label="Filtrar empresas">
+          <button type="button" class="filter-tab js-filter-tab" data-filter="all" aria-pressed="true">
+            Todos <span id="count-all" class="count-pill">0</span>
+          </button>
+          <button type="button" class="filter-tab js-filter-tab" data-filter="high_close" aria-pressed="false">
+            🔥 Quase Certeza / Sempre Ativa <span id="count-high-close" class="count-pill">0</span>
+          </button>
+          <button type="button" class="filter-tab js-filter-tab" data-filter="instagram" aria-pressed="false">
+            📸 Com Instagram <span id="count-instagram" class="count-pill">0</span>
+          </button>
+          <button type="button" class="filter-tab js-filter-tab" data-filter="uncontacted" aria-pressed="false">
+            ⏳ Não Contatados <span id="count-uncontacted" class="count-pill">0</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="status-banner" aria-live="polite">
+        <span id="status-banner-text">Iniciando busca automática no Google Maps...</span>
+      </div>
+
+      <div id="table-container" class="table-responsive">
+        <table class="leads-table">
+          <thead>
+            <tr>
+              <th scope="col">Empresa Real (Sem Site)</th>
+              <th scope="col">Telefone Comercial (Copiar)</th>
+              <th scope="col">Instagram</th>
+              <th scope="col">Status CRM</th>
+            </tr>
+          </thead>
+          <tbody id="leads-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="load-more-row" style="text-align: center; margin: 1.5rem 0;">
+        <button type="button" id="btn-load-more" class="btn btn-secondary" style="display: none; padding: 0.85rem 1.8rem; font-size: 0.95rem; font-weight: 600; border-radius: 9999px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); cursor: pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="margin-right: 0.4rem; vertical-align: middle;">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+          ⚡ Aprofundar Busca &amp; Carregar Mais Empresas (+40 Novas)
+        </button>
+      </div>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <h3>Nenhuma empresa neste filtro</h3>
+        <p>Clique na aba "Todos" acima ou tente buscar outra cidade/nicho.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Configuração da Nuvem (Independência do Computador) -->
+  <div id="cloud-modal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-cloud-title">
+      <div class="modal-header">
+        <h3 id="modal-cloud-title">🌐 Conexão &amp; Hospedagem na Nuvem</h3>
+        <button type="button" id="btn-close-cloud-modal" class="btn-close-modal" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          Para que o sistema <strong>funcione sem depender do seu computador ligado</strong> e qualquer pessoa consiga acessar, você pode hospedá-lo 100% grátis no <strong>Vercel</strong> ou <strong>Render</strong>.
+        </p>
+
+        <div class="server-status-box">
+          <div class="server-status-row">
+            <span class="status-label">Status da Conexão:</span>
+            <span id="modal-server-status" class="status-val-pill">Detectando...</span>
+          </div>
+          <div class="server-status-row">
+            <span class="status-label">Endereço Ativo:</span>
+            <span id="modal-server-url" class="status-val-url">-</span>
+          </div>
+        </div>
+
+        <form id="cloud-config-form" class="cloud-config-form">
+          <label for="custom-backend-input">URL Personalizada da sua API (Opcional):</label>
+          <div class="input-with-button">
+            <input type="url" id="custom-backend-input" placeholder="Ex: https://meu-achar-cliente.vercel.app">
+            <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+          </div>
+          <small class="field-hint" style="display:block; margin-top:0.35rem; color:#64748b;">Deixe em branco para conexão automática padrão.</small>
+        </form>
+
+        <div class="cloud-steps-box">
+          <h4>🚀 Como colocar no Vercel em 2 minutos (100% Grátis):</h4>
+          <ol>
+            <li>Coloque esta pasta no seu <strong>GitHub</strong>.</li>
+            <li>Entre em <strong>vercel.com</strong> e clique em <strong>"Add New Project"</strong>.</li>
+            <li>Selecione o repositório e clique em <strong>Deploy</strong>.</li>
+          </ol>
+          <p style="margin:0.5rem 0 0 0; font-size:0.8125rem; color:#1e40af;">
+            ✅ O Vercel ativa o site e as funções de busca do Google Maps no ar 24h por dia sem você precisar ligar o PC!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
