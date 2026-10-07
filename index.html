@@ -13,7 +13,25 @@
   <link rel="stylesheet" href="styles.css?v=4.2">
 </head>
 <body>
-  <!-- Branded Fast Loading Screen with MovveFind Logo -->
+  <!-- Password Gate (mf7) -->
+  <div id="auth-gate-overlay" class="modal-backdrop" style="z-index: 999999; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;">
+    <div class="modal-card" style="max-width: 400px; width: 90%; text-align: center; padding: 2.5rem 2rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+      <img src="logo-transparent.png" alt="Logo MovveFind" style="width: 80px; height: auto; margin-bottom: 1rem;">
+      <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; color: #f8fafc;">Acesso Protegido</h2>
+      <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.5rem;">Digite a senha de autorização para liberar o buscador de empresas:</p>
+      <form id="auth-gate-form">
+        <div style="margin-bottom: 1.25rem;">
+          <input type="password" id="auth-gate-password" placeholder="Digite a senha..." autofocus required
+            style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; font-size: 1.1rem; text-align: center; letter-spacing: 2px;">
+          <div id="auth-gate-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.6rem; display: none;">Senha incorreta. Tente novamente.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-weight: 600; font-size: 1rem;">
+          Entrar no Sistema
+        </button>
+      </form>
+    </div>
+  </div>
+
   <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" hidden>
     <div class="loading-card">
       <img src="logo-transparent.png" alt="Logo MovveFind" class="loading-logo" width="90" height="39">

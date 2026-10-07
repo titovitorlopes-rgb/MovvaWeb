@@ -1195,7 +1195,47 @@
       });
     }
 
-    executeLeadSearch();
+    // Password Gate Controller ("mf7")
+    const authOverlay = document.getElementById('auth-gate-overlay');
+    const authForm = document.getElementById('auth-gate-form');
+    const authInput = document.getElementById('auth-gate-password');
+    const authError = document.getElementById('auth-gate-error');
+    const AUTH_KEY = 'movvefind_auth_mf7';
+
+    function checkAuth() {
+      if (sessionStorage.getItem(AUTH_KEY) === 'granted') {
+        if (authOverlay) authOverlay.style.display = 'none';
+        executeLeadSearch();
+        return true;
+      }
+      if (authOverlay) {
+        authOverlay.style.display = 'flex';
+        if (authInput) setTimeout(() => authInput.focus(), 100);
+      }
+      return false;
+    }
+
+    if (authForm) {
+      authForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pwd = (authInput ? authInput.value : '').trim();
+        if (pwd === 'mf7') {
+          sessionStorage.setItem(AUTH_KEY, 'granted');
+          if (authError) authError.style.display = 'none';
+          if (authOverlay) authOverlay.style.display = 'none';
+          showToast('Acesso autorizado! Bem-vindo.');
+          executeLeadSearch();
+        } else {
+          if (authError) authError.style.display = 'block';
+          if (authInput) {
+            authInput.value = '';
+            authInput.focus();
+          }
+        }
+      });
+    }
+
+    checkAuth();
   }
 
   if (document.readyState === 'loading') {
@@ -1204,3 +1244,4 @@
     initApp();
   }
 })();
+
