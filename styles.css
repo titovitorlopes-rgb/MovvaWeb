@@ -244,6 +244,28 @@ body {
   transform: translateY(-1px);
 }
 
+/* Gmail Direct Button */
+.btn-gmail {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  border: 1px solid #2563eb;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.btn-gmail:hover {
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  filter: brightness(1.05);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
 .btn-contact-alt {
   background-color: #ffffff;
   color: var(--text-primary);
@@ -834,6 +856,55 @@ textarea {
   color: var(--text-muted);
 }
 
+/* Gmail Cell */
+.gmail-cell-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-start;
+}
+
+/* Advice Pill (Onde Chamar) */
+.lead-advice-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  margin-top: 0.2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease;
+}
+
+.lead-advice-pill:hover {
+  transform: translateY(-1px);
+}
+
+.lead-advice-pill.advice-insta {
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+  color: #be123c;
+  border: 1.5px solid #fecdd3;
+}
+
+.lead-advice-pill.advice-wa {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  color: #15803d;
+  border: 1.5px solid #bbf7d0;
+}
+
+.lead-advice-pill.advice-gmail {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: #1d4ed8;
+  border: 1.5px solid #bfdbfe;
+}
+
+.advice-sparkle {
+  font-size: 0.85rem;
+}
+
 /* Business Info Cell */
 .biz-name {
   font-weight: 700;
@@ -1236,17 +1307,20 @@ textarea {
 
   .btn-copy-phone,
   .btn-call,
-  .btn-whatsapp {
+  .btn-whatsapp,
+  .btn-gmail {
     width: 100%;
     min-height: 44px;
     justify-content: center;
     font-size: 0.875rem;
   }
 
-  .btn-whatsapp {
+  .btn-whatsapp,
+  .btn-gmail {
     grid-column: 1 / -1;
   }
 
+  .gmail-cell-wrap,
   .instagram-cell-wrap {
     width: 100%;
   }
