@@ -711,48 +711,228 @@
   }
 
   
-  // --- Instagram Authentication & Gatekeeper System ("O Susto") ---
-  const AUTH_USER_KEY = 'movvefind_ig_user';
+  // --- Gmail Authentication & Gatekeeper System (Login & Sign Up) ---
+  const AUTH_USER_KEY = 'movvefind_gmail_user';
   const AUTH_GRANTED_KEY = 'movvefind_auth_granted';
+  const USERS_STORAGE_KEY = 'movvefind_registered_accounts';
 
-  function getLoggedInIgUser() {
-    const isGranted = localStorage.getItem(AUTH_GRANTED_KEY) === 'true';
-    const user = (localStorage.getItem(AUTH_USER_KEY) || '').trim();
-    return isGranted && user ? user : null;
+  // Validação estrita de Gmail: apenas contas oficiais @gmail.com com regras do Google
+  function validateGmail(rawEmail) {
+    if (!rawEmail || typeof rawEmail !== 'string') {
+      return { valid: false, error: 'Por favor, digite seu endereço de Gmail.' };
+    }
+    const email = rawEmail.trim().toLowerCase();
+
+    if (!email.includes('@')) {
+      return { valid: false, error: 'E-mail inválido. Digite no formato seunome@gmail.com.' };
+    }
+
+    const parts = email.split('@');
+    if (parts.length !== 2) {
+      return { valid: false, error: 'Endereço de e-mail inválido.' };
+    }
+
+    const [username, domain] = parts;
+
+    // Apenas gmail.com ou googlemail.com oficial
+    if (domain !== 'gmail.com' && domain !== 'googlemail.com') {
+      return {
+        valid: false,
+        error: `Apenas contas oficiais @gmail.com são aceitas. O domínio @${domain} não é permitido.`
+      };
+    }
+
+    // Regra do Google: usuário precisa ter entre 6 e 30 caracteres antes do @
+    if (username.length < 6) {
+      return {
+        valid: false,
+        error: 'O usuário do Gmail precisa ter pelo menos 6 caracteres antes de @gmail.com.'
+      };
+    }
+    if (username.length > 30) {
+      return {
+        valid: false,
+        error: 'O usuário do Gmail pode ter no máximo 30 caracteres.'
+      };
+    }
+
+    // Apenas letras, números e pontos
+    if (!/^[a-z0-9.]+$/.test(username)) {
+      return {
+        valid: false,
+        error: 'O Gmail pode conter apenas letras (a-z), números (0-9) e pontos (sem caracteres especiais).'
+      };
+    }
+
+    // Não pode começar nem terminar com ponto
+    if (username.startsWith('.') || username.endsWith('.')) {
+      return {
+        valid: false,
+        error: 'O Gmail não pode começar ou terminar com ponto final.'
+      };
+    }
+
+    // Não pode ter pontos consecutivos (..)
+    if (username.includes('..')) {
+      return {
+        valid: false,
+        error: 'O Gmail não pode conter dois pontos seguidos (..).'
+      };
+    }
+
+    const cleanUser = username.replace(/\./g, '');
+
+    // Bloqueia caracteres repetidos ou bobos (ex: aaaaaa, 111111)
+    if (/^(.)\1+$/.test(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Gmail inválido. Não crie contas com letras ou números repetidos.'
+      };
+    }
+
+    // Bloqueia padrões conhecidos de emails fakes ou "nada a ver"
+    const fakeList = [
+      'teste', 'test', 'tester', 'testando', 'fake', 'fakegmail', 'nadaaver',
+      'asdf', 'asdfgh', 'asdfghjkl', 'qwerty', 'zxcvbn',
+      '123456', '1234567', '12345678', '123456789', '654321',
+      'admin', 'administrator', 'root', 'usuario', 'meugmail', 'qualquer'
+    ];
+    if (fakeList.includes(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Gmail de teste ou genérico detectado. Digite seu Gmail real.'
+      };
+    }
+
+    if (/^(0123456789|1234567890|abcdefghijklmnopqrstuvwxyz)$/i.test(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Digite um Gmail real.'
+      };
+    }
+
+    return { valid: true, email };
   }
 
-    function openIgLoginModal() {
+  function getRegisteredAccounts() {
+    try {
+      const data = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '{}');
+      return typeof data === 'object' && data !== null ? data : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveRegisteredAccount(email, password) {
+    const accounts = getRegisteredAccounts();
+    accounts[email.toLowerCase()] = {
+      password: password,
+      registeredAt: Date.now()
+    };
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(accounts));
+    } catch (e) {
+      console.warn('Erro ao salvar conta:', e);
+    }
+  }
+
+  function getLoggedInGmailUser() {
+    const isGranted = localStorage.getItem(AUTH_GRANTED_KEY) === 'true';
+    const email = (localStorage.getItem(AUTH_USER_KEY) || '').trim().toLowerCase();
+    const check = validateGmail(email);
+    return isGranted && check.valid ? email : null;
+  }
+
+  // Compatibilidade com código existente
+  const getLoggedInIgUser = getLoggedInGmailUser;
+
+  function setAuthTab(tab) {
+    const tabBtnLogin = document.getElementById('tab-btn-login');
+    const tabBtnSignup = document.getElementById('tab-btn-signup');
+    const loginForm = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const loginErr = document.getElementById('login-error-msg');
+    const signupErr = document.getElementById('signup-error-msg');
+
+    if (loginErr) loginErr.style.display = 'none';
+    if (signupErr) signupErr.style.display = 'none';
+
+    if (tab === 'login') {
+      if (tabBtnLogin) {
+        tabBtnLogin.classList.add('active');
+        tabBtnLogin.style.background = '#ffffff';
+        tabBtnLogin.style.color = '#1e293b';
+        tabBtnLogin.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      }
+      if (tabBtnSignup) {
+        tabBtnSignup.classList.remove('active');
+        tabBtnSignup.style.background = 'transparent';
+        tabBtnSignup.style.color = '#64748b';
+        tabBtnSignup.style.boxShadow = 'none';
+      }
+      if (loginForm) loginForm.style.display = 'block';
+      if (signupForm) signupForm.style.display = 'none';
+      const input = document.getElementById('login-email-input');
+      if (input) setTimeout(() => input.focus(), 100);
+    } else {
+      if (tabBtnSignup) {
+        tabBtnSignup.classList.add('active');
+        tabBtnSignup.style.background = '#ffffff';
+        tabBtnSignup.style.color = '#1e293b';
+        tabBtnSignup.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      }
+      if (tabBtnLogin) {
+        tabBtnLogin.classList.remove('active');
+        tabBtnLogin.style.background = 'transparent';
+        tabBtnLogin.style.color = '#64748b';
+        tabBtnLogin.style.boxShadow = 'none';
+      }
+      if (loginForm) loginForm.style.display = 'none';
+      if (signupForm) signupForm.style.display = 'block';
+      const input = document.getElementById('signup-email-input');
+      if (input) setTimeout(() => input.focus(), 100);
+    }
+  }
+
+  function openAuthModal(tab = 'login') {
     const overlay = document.getElementById('auth-gate-overlay');
-    const input = document.getElementById('ig-username-input');
-    const err = document.getElementById('ig-step1-error');
-    const btn = document.getElementById('ig-continue-btn');
     if (overlay) {
       overlay.style.display = 'flex';
-      overlay.hidden = false;
+      overlay.removeAttribute('hidden');
     }
-    if (err) err.style.display = 'none';
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
-    }
-    if (input) {
-      input.value = (localStorage.getItem(AUTH_USER_KEY) || '').replace(/^@+/, '');
-      setTimeout(() => input.focus(), 150);
+    setAuthTab(tab);
+    const savedUser = localStorage.getItem(AUTH_USER_KEY) || '';
+    const loginEmail = document.getElementById('login-email-input');
+    if (loginEmail && savedUser) {
+      loginEmail.value = savedUser;
     }
   }
 
-  function updateIgUserUI() {
-    const user = getLoggedInIgUser();
-    const badge = document.getElementById('ig-user-badge');
-    const display = document.getElementById('ig-user-name-display');
+  const openIgLoginModal = openAuthModal;
+
+  function closeAuthModal() {
+    const overlay = document.getElementById('auth-gate-overlay');
+    if (overlay) {
+      overlay.style.setProperty('display', 'none', 'important');
+      overlay.setAttribute('hidden', '');
+    }
+  }
+
+  function updateAuthUserUI() {
+    const user = getLoggedInGmailUser();
+    const badge = document.getElementById('auth-user-badge') || document.getElementById('ig-user-badge');
+    const display = document.getElementById('auth-user-name-display') || document.getElementById('ig-user-name-display');
     if (badge && display) {
       if (user) {
-        display.textContent = user.startsWith('@') ? user : `@${user}`;
+        display.textContent = user;
         badge.style.display = 'inline-flex';
       } else {
         badge.style.display = 'none';
       }
     }
+  }
+
+  const updateIgUserUI = updateAuthUserUI;
   }
 
   // --- US Searches Rate Limit System (2 searches per 5 hours per Instagram User) ---
@@ -1275,72 +1455,127 @@
       });
     }
 
-    // --- Instagram Auth & Gatekeeper Controller ---
+    // --- Gmail Auth & Gatekeeper Controller (Login & Sign Up) ---
     const authOverlay = document.getElementById('auth-gate-overlay');
-    const igForm = document.getElementById('ig-login-form');
-    const igInput = document.getElementById('ig-username-input');
-    const igError = document.getElementById('ig-step1-error');
-    const igBtn = document.getElementById('ig-continue-btn');
-    const btnIgLogout = document.getElementById('btn-ig-logout');
-
-    // Permite nomes de usuário válidos: letras, números, ponto, underline e hífen, de 1 a 35 caracteres
-    const IG_REGEX = /^[a-zA-Z0-9._-]{1,35}$/;
+    const tabBtnLogin = document.getElementById('tab-btn-login');
+    const tabBtnSignup = document.getElementById('tab-btn-signup');
+    const linkToSignup = document.getElementById('link-to-signup');
+    const linkToLogin = document.getElementById('link-to-login');
+    const loginForm = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const btnLogout = document.getElementById('btn-auth-logout') || document.getElementById('btn-ig-logout');
 
     window.executeLeadSearch = executeLeadSearch;
 
-    window.handleIgLoginSubmit = (e) => {
-      if (e && e.preventDefault) e.preventDefault();
-      
-      const raw = (igInput ? igInput.value : '').trim();
-      // Remove URLs completas, @ repetidos, barras e espaços
-      const clean = raw
-        .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '')
-        .replace(/\/.*$/, '')
-        .replace(/^@+/, '')
-        .replace(/\s+/g, '')
-        .trim();
+    if (tabBtnLogin) tabBtnLogin.addEventListener('click', () => setAuthTab('login'));
+    if (tabBtnSignup) tabBtnSignup.addEventListener('click', () => setAuthTab('signup'));
 
-      if (!clean || !IG_REGEX.test(clean)) {
-        if (igError) {
-          igError.textContent = 'Nome de usuário inválido! Digite apenas o seu usuário (ex: seu_perfil).';
-          igError.style.display = 'block';
+    if (linkToSignup) {
+      linkToSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        const loginEmail = document.getElementById('login-email-input');
+        const signupEmail = document.getElementById('signup-email-input');
+        if (loginEmail && signupEmail && loginEmail.value) {
+          signupEmail.value = loginEmail.value;
         }
-        if (igInput) igInput.focus();
+        setAuthTab('signup');
+      });
+    }
+
+    if (linkToLogin) {
+      linkToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        const loginEmail = document.getElementById('login-email-input');
+        const signupEmail = document.getElementById('signup-email-input');
+        if (loginEmail && signupEmail && signupEmail.value) {
+          loginEmail.value = signupEmail.value;
+        }
+        setAuthTab('login');
+      });
+    }
+
+    // Handler de Login
+    window.handleLoginSubmit = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const emailInput = document.getElementById('login-email-input');
+      const passInput = document.getElementById('login-password-input');
+      const errBox = document.getElementById('login-error-msg');
+      const submitBtn = document.getElementById('btn-login-submit');
+
+      const emailVal = (emailInput ? emailInput.value : '').trim();
+      const passVal = (passInput ? passInput.value : '').trim();
+
+      const check = validateGmail(emailVal);
+      if (!check.valid) {
+        if (errBox) {
+          errBox.textContent = check.error;
+          errBox.style.display = 'block';
+        }
+        if (emailInput) emailInput.focus();
         return false;
       }
 
-      if (igError) igError.style.display = 'none';
+      if (!passVal) {
+        if (errBox) {
+          errBox.textContent = 'Digite sua senha para acessar.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
 
-      const finalHandle = `@${clean}`;
+      const accounts = getRegisteredAccounts();
+      const account = accounts[check.email];
 
-      if (igBtn) {
-        igBtn.disabled = true;
-        igBtn.innerHTML = '<span>⏳ Validando perfil no Instagram...</span>';
+      if (!account) {
+        if (errBox) {
+          errBox.innerHTML = `Conta não encontrada com ${check.email}.<br><a href="#" id="err-link-signup" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Clique aqui para criar sua conta (Sign Up)</a>.`;
+          errBox.style.display = 'block';
+          const errLink = document.getElementById('err-link-signup');
+          if (errLink) {
+            errLink.onclick = (ev) => {
+              ev.preventDefault();
+              const signupEmail = document.getElementById('signup-email-input');
+              if (signupEmail) signupEmail.value = check.email;
+              setAuthTab('signup');
+            };
+          }
+        }
+        return false;
+      }
+
+      if (account.password !== passVal) {
+        if (errBox) {
+          errBox.textContent = 'Senha incorreta. Verifique e tente novamente.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Entrando...</span>';
       }
 
       try {
-        localStorage.setItem(AUTH_USER_KEY, finalHandle);
+        localStorage.setItem(AUTH_USER_KEY, check.email);
         localStorage.setItem(AUTH_GRANTED_KEY, 'true');
       } catch (err) {
         console.warn('localStorage error:', err);
       }
 
       setTimeout(() => {
-        const overlay = document.getElementById('auth-gate-overlay') || authOverlay;
-        if (overlay) {
-          overlay.style.setProperty('display', 'none', 'important');
-          overlay.setAttribute('hidden', '');
+        closeAuthModal();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>🔓 Entrar com Gmail</span>';
         }
-
-        if (igBtn) {
-          igBtn.disabled = false;
-          igBtn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
-        }
-
         try {
-          updateIgUserUI();
+          updateAuthUserUI();
           updateUsQuotaUI();
-          showToast(`🎉 Perfil ${finalHandle} validado! Acesso liberado.`);
+          showToast(`🎉 Bem-vindo(a)! Conectado como ${check.email}`);
         } catch (err) {
           console.warn('UI update error:', err);
         }
@@ -1355,18 +1590,115 @@
       return false;
     };
 
-    if (igForm) {
-      igForm.addEventListener('submit', window.handleIgLoginSubmit);
-    }
+    // Handler de Sign Up (Cadastro)
+    window.handleSignupSubmit = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const emailInput = document.getElementById('signup-email-input');
+      const passInput = document.getElementById('signup-password-input');
+      const passConfirmInput = document.getElementById('signup-password-confirm');
+      const errBox = document.getElementById('signup-error-msg');
+      const submitBtn = document.getElementById('btn-signup-submit');
 
-    if (btnIgLogout) {
-      btnIgLogout.addEventListener('click', () => {
+      const emailVal = (emailInput ? emailInput.value : '').trim();
+      const passVal = (passInput ? passInput.value : '').trim();
+      const confirmVal = (passConfirmInput ? passConfirmInput.value : '').trim();
+
+      const check = validateGmail(emailVal);
+      if (!check.valid) {
+        if (errBox) {
+          errBox.textContent = check.error;
+          errBox.style.display = 'block';
+        }
+        if (emailInput) emailInput.focus();
+        return false;
+      }
+
+      if (!passVal || passVal.length < 6) {
+        if (errBox) {
+          errBox.textContent = 'A senha precisa ter no mínimo 6 caracteres.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
+
+      if (passVal !== confirmVal) {
+        if (errBox) {
+          errBox.textContent = 'As senhas não conferem. Digite a mesma senha nos dois campos.';
+          errBox.style.display = 'block';
+        }
+        if (passConfirmInput) passConfirmInput.focus();
+        return false;
+      }
+
+      const accounts = getRegisteredAccounts();
+      if (accounts[check.email]) {
+        if (errBox) {
+          errBox.innerHTML = `Este Gmail já está cadastrado.<br><a href="#" id="err-link-login" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Clique aqui para fazer login</a>.`;
+          errBox.style.display = 'block';
+          const errLink = document.getElementById('err-link-login');
+          if (errLink) {
+            errLink.onclick = (ev) => {
+              ev.preventDefault();
+              const loginEmail = document.getElementById('login-email-input');
+              if (loginEmail) loginEmail.value = check.email;
+              setAuthTab('login');
+            };
+          }
+        }
+        return false;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Criando conta...</span>';
+      }
+
+      // Salva a conta criada
+      saveRegisteredAccount(check.email, passVal);
+
+      try {
+        localStorage.setItem(AUTH_USER_KEY, check.email);
+        localStorage.setItem(AUTH_GRANTED_KEY, 'true');
+      } catch (err) {
+        console.warn('localStorage error:', err);
+      }
+
+      setTimeout(() => {
+        closeAuthModal();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>✨ Criar Conta e Liberar Acesso</span>';
+        }
+        try {
+          updateAuthUserUI();
+          updateUsQuotaUI();
+          showToast(`🎉 Conta criada com sucesso! Bem-vindo(a), ${check.email}`);
+        } catch (err) {
+          console.warn('UI update error:', err);
+        }
+
+        try {
+          executeLeadSearch();
+        } catch (err) {
+          console.error('executeLeadSearch error:', err);
+        }
+      }, 300);
+
+      return false;
+    };
+
+    if (loginForm) loginForm.addEventListener('submit', window.handleLoginSubmit);
+    if (signupForm) signupForm.addEventListener('submit', window.handleSignupSubmit);
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
         localStorage.removeItem(AUTH_GRANTED_KEY);
-        updateIgUserUI();
-        openIgLoginModal();
+        updateAuthUserUI();
+        openAuthModal('login');
         showToast('Você saiu da sua conta.');
       });
-    }
 
     // Modal US Limit buttons
     const usLimitModal = document.getElementById('us-limit-modal');

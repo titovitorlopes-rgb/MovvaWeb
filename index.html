@@ -1518,10 +1518,11 @@ textarea {
   }
 }
 
+.auth-user-pill,
 .ig-user-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   padding: 0.35rem 0.85rem;
   background: #ffffff;
   border: 1px solid var(--border-strong);
@@ -1532,6 +1533,7 @@ textarea {
   box-shadow: var(--shadow-sm);
 }
 
+.auth-user-pill .btn-auth-logout,
 .ig-user-pill .btn-ig-logout {
   background: none;
   border: none;
@@ -1542,8 +1544,38 @@ textarea {
   padding-left: 0.2rem;
 }
 
+.auth-user-pill .btn-auth-logout:hover,
 .ig-user-pill .btn-ig-logout:hover {
   color: #dc2626;
+}
+
+.auth-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 1.25rem;
+  gap: 4px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 0.65rem 0.5rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .us-quota-info-banner {
@@ -1562,64 +1594,110 @@ textarea {
 </style>
 </head>
 <body>
-    <!-- Instagram Login & Gatekeeper Overlay ("O Susto") -->
+    <!-- Gmail Login & Sign Up Gatekeeper Overlay -->
   <div id="auth-gate-overlay" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 1rem;">
-    <div style="max-width: 480px; width: 100%; background: #ffffff; border-radius: 20px; padding: 2.25rem 2rem; border: 1.5px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); text-align: center; color: #0f172a;">
+    <div style="max-width: 460px; width: 100%; background: #ffffff; border-radius: 20px; padding: 2.25rem 2rem; border: 1.5px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); text-align: center; color: #0f172a;">
       
-      <!-- Logo do Instagram estilizado -->
-      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
-        <div style="width: 62px; height: 62px; border-radius: 18px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(220, 39, 67, 0.4);">
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+      <!-- Logo do Google / Gmail -->
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 0.85rem;">
+        <div style="width: 58px; height: 58px; border-radius: 16px; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1.5px solid #e2e8f0;">
+          <svg width="32" height="32" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
         </div>
       </div>
 
-      <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #eff6ff; color: #2563eb; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Versão Gratuita MovveFind</span>
-      <h2 style="font-size: 1.45rem; font-weight: 800; margin: 0 0 0.35rem 0; color: #0f172a; letter-spacing: -0.02em;">Entrar com o Instagram</h2>
-      
-      <!-- O Susto: Alerta de Seguidor Obrigatorio -->
-      <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 14px; padding: 1rem 1.15rem; margin: 1rem 0 1.25rem 0; text-align: left; font-size: 0.875rem; line-height: 1.5;">
-        <div style="display: flex; align-items: center; gap: 0.4rem; color: #dc2626; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.35rem;">
-          <span>⚠️</span>
-          <span>Atenção: Acesso Restrito aos Seguidores!</span>
-        </div>
-        <p style="margin: 0 0 0.5rem 0; color: #7f1d1d; font-size: 0.825rem;">
-          Para ter acesso à versão gratuita de busca de clientes, você <strong>DEVE OBRIGATORIAMENTE</strong> seguir nosso perfil oficial:
-        </p>
-        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem; border-radius: 10px; background: #ffffff; border: 1.5px solid #f87171; color: #b91c1c; font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: all 0.2s;">
-          👉 Seguir @movva_web no Instagram ↗
-        </a>
+      <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #eff6ff; color: #2563eb; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">Versão Gratuita MovveFind</span>
+      <h2 style="font-size: 1.4rem; font-weight: 800; margin: 0 0 0.35rem 0; color: #0f172a; letter-spacing: -0.02em;">Acesso com Gmail</h2>
+      <p style="color: #64748b; font-size: 0.85rem; margin: 0 0 1.25rem 0;">Apenas contas reais e válidas do Gmail (@gmail.com) são aceitas.</p>
+
+      <!-- Tabs de Navegação: Login / Sign Up -->
+      <div class="auth-tabs">
+        <button type="button" id="tab-btn-login" class="auth-tab-btn active">
+          🔑 Fazer Login
+        </button>
+        <button type="button" id="tab-btn-signup" class="auth-tab-btn">
+          ✍️ Criar Conta (Sign Up)
+        </button>
       </div>
 
-      <form id="ig-login-form" onsubmit="if (window.handleIgLoginSubmit) { window.handleIgLoginSubmit(event); } return false;">
-        <div style="margin-bottom: 1.1rem; text-align: left;">
-          <label for="ig-username-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">
-            Seu @ do Instagram:
+      <!-- Formulário de Login -->
+      <form id="auth-login-form" onsubmit="if (window.handleLoginSubmit) { window.handleLoginSubmit(event); } return false;">
+        <div style="margin-bottom: 1rem; text-align: left;">
+          <label for="login-email-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem;">
+            Seu Gmail:
           </label>
-          <div style="position: relative; display: flex; align-items: center;">
-            <span style="position: absolute; left: 1rem; color: #94a3b8; font-weight: 700; font-size: 1.1rem; pointer-events: none;">@</span>
-            <input type="text" id="ig-username-input" placeholder="seu_perfil" autofocus required autocomplete="off"
-              style="width: 100%; box-sizing: border-box; padding: 0.85rem 1rem 0.85rem 2.25rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 1.05rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
-          </div>
-          <div id="ig-step1-error" style="color: #ef4444; font-size: 0.8125rem; margin-top: 0.5rem; display: none; font-weight: 600; line-height: 1.4;">
-            Nome de usuário do Instagram inválido. Digite um perfil válido.
-          </div>
+          <input type="email" id="login-email-input" placeholder="seuemail@gmail.com" autofocus required autocomplete="email"
+            style="width: 100%; box-sizing: border-box; padding: 0.8rem 1rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
         </div>
 
-        <button type="button" onclick="if (window.handleIgLoginSubmit) { window.handleIgLoginSubmit(event); }" id="ig-continue-btn" style="width: 100%; padding: 0.9rem; border-radius: 12px; border: none; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 6px 18px rgba(220, 39, 67, 0.35); transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-          <span>🔓 Entrar e Liberar Acesso</span>
+        <div style="margin-bottom: 1.1rem; text-align: left;">
+          <label for="login-password-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem;">
+            Sua Senha:
+          </label>
+          <input type="password" id="login-password-input" placeholder="Digite sua senha" required autocomplete="current-password"
+            style="width: 100%; box-sizing: border-box; padding: 0.8rem 1rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
+          <div id="login-error-msg" style="color: #ef4444; font-size: 0.8125rem; margin-top: 0.5rem; display: none; font-weight: 600; line-height: 1.4; text-align: left;"></div>
+        </div>
+
+        <button type="submit" id="btn-login-submit" style="width: 100%; padding: 0.85rem; border-radius: 12px; border: none; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span>🔓 Entrar com Gmail</span>
         </button>
+        
+        <p style="margin: 0.85rem 0 0 0; font-size: 0.8125rem; color: #64748b;">
+          Não tem uma conta? <a href="#" id="link-to-signup" style="color: #2563eb; font-weight: 700; text-decoration: none;">Cadastre-se aqui</a>
+        </p>
       </form>
 
-      <p style="font-size: 0.75rem; color: #94a3b8; margin: 1rem 0 0 0;">
-        Ao entrar, você confirma que segue a página oficial @movva_web.
-      </p>
+      <!-- Formulário de Cadastro (Sign Up) -->
+      <form id="auth-signup-form" style="display: none;" onsubmit="if (window.handleSignupSubmit) { window.handleSignupSubmit(event); } return false;">
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 0.6rem 0.75rem; margin-bottom: 0.85rem; text-align: left; font-size: 0.8rem; color: #1e40af; line-height: 1.4;">
+          🔒 <strong>Validação Estrita:</strong> Digite um Gmail real e válido (@gmail.com). E-mails genéricos ou inventados não são permitidos.
+        </div>
+
+        <div style="margin-bottom: 0.85rem; text-align: left;">
+          <label for="signup-email-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem;">
+            Seu Gmail Válido:
+          </label>
+          <input type="email" id="signup-email-input" placeholder="seugmail@gmail.com" required autocomplete="email"
+            style="width: 100%; box-sizing: border-box; padding: 0.8rem 1rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <div style="margin-bottom: 0.85rem; text-align: left;">
+          <label for="signup-password-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem;">
+            Crie uma Senha (mínimo 6 caracteres):
+          </label>
+          <input type="password" id="signup-password-input" placeholder="Mínimo 6 caracteres" required autocomplete="new-password"
+            style="width: 100%; box-sizing: border-box; padding: 0.8rem 1rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
+        </div>
+
+        <div style="margin-bottom: 1.1rem; text-align: left;">
+          <label for="signup-password-confirm" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem;">
+            Confirme sua Senha:
+          </label>
+          <input type="password" id="signup-password-confirm" placeholder="Repita a senha criada" required autocomplete="new-password"
+            style="width: 100%; box-sizing: border-box; padding: 0.8rem 1rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 0.95rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
+          <div id="signup-error-msg" style="color: #ef4444; font-size: 0.8125rem; margin-top: 0.5rem; display: none; font-weight: 600; line-height: 1.4; text-align: left;"></div>
+        </div>
+
+        <button type="submit" id="btn-signup-submit" style="width: 100%; padding: 0.85rem; border-radius: 12px; border: none; background: #16a34a; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35); transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span>✨ Criar Conta e Liberar Acesso</span>
+        </button>
+
+        <p style="margin: 0.85rem 0 0 0; font-size: 0.8125rem; color: #64748b;">
+          Já tem conta? <a href="#" id="link-to-login" style="color: #2563eb; font-weight: 700; text-decoration: none;">Faça login aqui</a>
+        </p>
+      </form>
+      <!-- Link Oficial do Instagram no Modal -->
+      <div style="margin-top: 1.15rem; padding-top: 0.85rem; border-top: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-size: 0.8125rem; color: #64748b;">
+        <span>📸 Siga nosso perfil oficial:</span>
+        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" style="color: #dc2743; font-weight: 700; text-decoration: none;">@movva_web ↗</a>
+      </div>
     </div>
   </div>
-
   <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" hidden>
     <div class="loading-card">
       <img src="data:image/png;base64,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" alt="Logo MovveFind" class="loading-logo" width="60" height="60">
@@ -1642,12 +1720,23 @@ textarea {
       </div>
 
       <div class="header-actions">
-        <div id="ig-user-badge" class="ig-user-pill" style="display: none;">
-          <span class="ig-badge-icon">📸</span>
-          <span id="ig-user-name-display">@usuario</span>
-          <span style="color: #94a3b8;">•</span>
-          <span style="color: #16a34a; font-size: 0.75rem;">Seguindo @movva_web</span>
-          <button type="button" id="btn-ig-logout" class="btn-ig-logout" title="Trocar de conta">(Sair)</button>
+        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" class="btn-ig-header-link" title="Seguir MovveWeb no Instagram" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.85rem; border-radius: 9999px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 700; font-size: 0.8125rem; text-decoration: none; box-shadow: 0 3px 10px rgba(220, 39, 67, 0.25);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+          </svg>
+          <span>Seguir @movva_web</span>
+        </a>
+        <div id="auth-user-badge" class="auth-user-pill" style="display: none;">
+          <svg width="15" height="15" viewBox="0 0 24 24" style="vertical-align: middle; flex-shrink: 0;">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span id="auth-user-name-display">usuario@gmail.com</span>
+          <button type="button" id="btn-auth-logout" class="btn-auth-logout" title="Trocar de conta">(Sair)</button>
         </div>
         <div id="cloud-status-badge" class="cloud-status-badge" title="Clique para detalhes da hospedagem na nuvem">
           <span class="status-indicator-dot"></span>
@@ -1829,8 +1918,24 @@ textarea {
         </table>
       </div>
 
-      <div class="free-limit-row" style="text-align: center; margin: 1.5rem 0; padding: 0.85rem; background: #ffffff; border: 1px solid var(--border-color); border-radius: 12px; font-size: 0.875rem; color: var(--text-secondary); box-shadow: var(--shadow-sm);">
-        ⭐ <strong>Versão Gratuita:</strong> Limite de 10 leads reais por pesquisa. Siga <strong>@movva_web</strong> para novidades e atualizações!
+            <!-- Área Oficial para Seguir o Instagram -->
+      <div class="instagram-follow-banner" style="margin: 1.5rem 0; padding: 1.15rem 1.4rem; background: linear-gradient(135deg, #ffffff 0%, #fff7ed 50%, #fff1f2 100%); border: 1.5px solid #fecdd3; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; box-shadow: 0 4px 14px rgba(225, 29, 72, 0.06);">
+        <div style="display: flex; align-items: center; gap: 0.85rem;">
+          <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(220, 39, 67, 0.3);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+            </svg>
+          </div>
+          <div>
+            <div style="font-weight: 800; font-size: 0.95rem; color: #0f172a;">Acompanhe o MovveFind no Instagram</div>
+            <div style="color: #64748b; font-size: 0.8125rem;">Receba novidades, estratégias de vendas e novas cidades pelo perfil oficial <strong>@movva_web</strong></div>
+          </div>
+        </div>
+        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.65rem 1.2rem; border-radius: 10px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 800; font-size: 0.875rem; text-decoration: none; box-shadow: 0 4px 14px rgba(220, 39, 67, 0.3); transition: transform 0.15s ease;">
+          <span>👉 Seguir @movva_web ↗</span>
+        </a>
       </div>
 
       <div id="empty-state" class="empty-state" hidden>
@@ -1895,12 +2000,12 @@ textarea {
       </div>
       <h3 id="modal-us-limit-title" style="color: #dc2626; font-size: 1.3rem; margin-bottom: 0.5rem; font-weight: 800;">Limite de Pesquisas nos EUA</h3>
       <p style="color: var(--text-secondary); font-size: 0.925rem; line-height: 1.5; margin-bottom: 1rem;">
-        Na <strong>Versão Gratuita</strong>, cada perfil do Instagram pode realizar no máximo <strong>2 pesquisas a cada 5 horas</strong> nos Estados Unidos.
+        Na <strong>Versão Gratuita</strong>, cada conta do Gmail pode realizar no máximo <strong>2 pesquisas a cada 5 horas</strong> nos Estados Unidos.
       </p>
       <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 1rem; margin-bottom: 1.25rem;">
         <div style="font-size: 0.8125rem; color: #991b1b; font-weight: 600;">Tempo de espera restante:</div>
         <div id="us-limit-timer-text" style="font-size: 1.6rem; font-weight: 800; color: #dc2626; margin: 0.25rem 0;">-</div>
-        <div style="font-size: 0.775rem; color: #b91c1c;">Usuário: <span id="us-limit-user-text">@usuario</span></div>
+        <div style="font-size: 0.775rem; color: #b91c1c;">Conta: <span id="us-limit-user-text">usuario@gmail.com</span></div>
       </div>
       <p style="font-size: 0.85rem; color: #0284c7; font-weight: 600; margin-bottom: 1.25rem;">
         💡 Dica: Você pode pesquisar empresas no Brasil normalmente sem essa limitação!
@@ -2632,49 +2737,228 @@ textarea {
   }
 
   
-  // --- Instagram Authentication & Gatekeeper System ("O Susto") ---
-  const AUTH_USER_KEY = 'movvefind_ig_user';
+  // --- Gmail Authentication & Gatekeeper System (Login & Sign Up) ---
+  const AUTH_USER_KEY = 'movvefind_gmail_user';
   const AUTH_GRANTED_KEY = 'movvefind_auth_granted';
+  const USERS_STORAGE_KEY = 'movvefind_registered_accounts';
 
-  function getLoggedInIgUser() {
-    const isGranted = localStorage.getItem(AUTH_GRANTED_KEY) === 'true';
-    const user = (localStorage.getItem(AUTH_USER_KEY) || '').trim();
-    return isGranted && user ? user : null;
+  // Validação estrita de Gmail: apenas contas oficiais @gmail.com com regras do Google
+  function validateGmail(rawEmail) {
+    if (!rawEmail || typeof rawEmail !== 'string') {
+      return { valid: false, error: 'Por favor, digite seu endereço de Gmail.' };
+    }
+    const email = rawEmail.trim().toLowerCase();
+
+    if (!email.includes('@')) {
+      return { valid: false, error: 'E-mail inválido. Digite no formato seunome@gmail.com.' };
+    }
+
+    const parts = email.split('@');
+    if (parts.length !== 2) {
+      return { valid: false, error: 'Endereço de e-mail inválido.' };
+    }
+
+    const [username, domain] = parts;
+
+    // Apenas gmail.com ou googlemail.com oficial
+    if (domain !== 'gmail.com' && domain !== 'googlemail.com') {
+      return {
+        valid: false,
+        error: `Apenas contas oficiais @gmail.com são aceitas. O domínio @${domain} não é permitido.`
+      };
+    }
+
+    // Regra do Google: usuário precisa ter entre 6 e 30 caracteres antes do @
+    if (username.length < 6) {
+      return {
+        valid: false,
+        error: 'O usuário do Gmail precisa ter pelo menos 6 caracteres antes de @gmail.com.'
+      };
+    }
+    if (username.length > 30) {
+      return {
+        valid: false,
+        error: 'O usuário do Gmail pode ter no máximo 30 caracteres.'
+      };
+    }
+
+    // Apenas letras, números e pontos
+    if (!/^[a-z0-9.]+$/.test(username)) {
+      return {
+        valid: false,
+        error: 'O Gmail pode conter apenas letras (a-z), números (0-9) e pontos (sem caracteres especiais).'
+      };
+    }
+
+    // Não pode começar nem terminar com ponto
+    if (username.startsWith('.') || username.endsWith('.')) {
+      return {
+        valid: false,
+        error: 'O Gmail não pode começar ou terminar com ponto final.'
+      };
+    }
+
+    // Não pode ter pontos consecutivos (..)
+    if (username.includes('..')) {
+      return {
+        valid: false,
+        error: 'O Gmail não pode conter dois pontos seguidos (..).'
+      };
+    }
+
+    const cleanUser = username.replace(/\./g, '');
+
+    // Bloqueia caracteres repetidos ou bobos (ex: aaaaaa, 111111)
+    if (/^(.)\1+$/.test(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Gmail inválido. Não crie contas com letras ou números repetidos.'
+      };
+    }
+
+    // Bloqueia padrões conhecidos de emails fakes ou "nada a ver"
+    const fakeList = [
+      'teste', 'test', 'tester', 'testando', 'fake', 'fakegmail', 'nadaaver',
+      'asdf', 'asdfgh', 'asdfghjkl', 'qwerty', 'zxcvbn',
+      '123456', '1234567', '12345678', '123456789', '654321',
+      'admin', 'administrator', 'root', 'usuario', 'meugmail', 'qualquer'
+    ];
+    if (fakeList.includes(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Gmail de teste ou genérico detectado. Digite seu Gmail real.'
+      };
+    }
+
+    if (/^(0123456789|1234567890|abcdefghijklmnopqrstuvwxyz)$/i.test(cleanUser)) {
+      return {
+        valid: false,
+        error: 'Digite um Gmail real.'
+      };
+    }
+
+    return { valid: true, email };
   }
 
-    function openIgLoginModal() {
+  function getRegisteredAccounts() {
+    try {
+      const data = JSON.parse(localStorage.getItem(USERS_STORAGE_KEY) || '{}');
+      return typeof data === 'object' && data !== null ? data : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveRegisteredAccount(email, password) {
+    const accounts = getRegisteredAccounts();
+    accounts[email.toLowerCase()] = {
+      password: password,
+      registeredAt: Date.now()
+    };
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(accounts));
+    } catch (e) {
+      console.warn('Erro ao salvar conta:', e);
+    }
+  }
+
+  function getLoggedInGmailUser() {
+    const isGranted = localStorage.getItem(AUTH_GRANTED_KEY) === 'true';
+    const email = (localStorage.getItem(AUTH_USER_KEY) || '').trim().toLowerCase();
+    const check = validateGmail(email);
+    return isGranted && check.valid ? email : null;
+  }
+
+  // Compatibilidade com código existente
+  const getLoggedInIgUser = getLoggedInGmailUser;
+
+  function setAuthTab(tab) {
+    const tabBtnLogin = document.getElementById('tab-btn-login');
+    const tabBtnSignup = document.getElementById('tab-btn-signup');
+    const loginForm = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const loginErr = document.getElementById('login-error-msg');
+    const signupErr = document.getElementById('signup-error-msg');
+
+    if (loginErr) loginErr.style.display = 'none';
+    if (signupErr) signupErr.style.display = 'none';
+
+    if (tab === 'login') {
+      if (tabBtnLogin) {
+        tabBtnLogin.classList.add('active');
+        tabBtnLogin.style.background = '#ffffff';
+        tabBtnLogin.style.color = '#1e293b';
+        tabBtnLogin.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      }
+      if (tabBtnSignup) {
+        tabBtnSignup.classList.remove('active');
+        tabBtnSignup.style.background = 'transparent';
+        tabBtnSignup.style.color = '#64748b';
+        tabBtnSignup.style.boxShadow = 'none';
+      }
+      if (loginForm) loginForm.style.display = 'block';
+      if (signupForm) signupForm.style.display = 'none';
+      const input = document.getElementById('login-email-input');
+      if (input) setTimeout(() => input.focus(), 100);
+    } else {
+      if (tabBtnSignup) {
+        tabBtnSignup.classList.add('active');
+        tabBtnSignup.style.background = '#ffffff';
+        tabBtnSignup.style.color = '#1e293b';
+        tabBtnSignup.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+      }
+      if (tabBtnLogin) {
+        tabBtnLogin.classList.remove('active');
+        tabBtnLogin.style.background = 'transparent';
+        tabBtnLogin.style.color = '#64748b';
+        tabBtnLogin.style.boxShadow = 'none';
+      }
+      if (loginForm) loginForm.style.display = 'none';
+      if (signupForm) signupForm.style.display = 'block';
+      const input = document.getElementById('signup-email-input');
+      if (input) setTimeout(() => input.focus(), 100);
+    }
+  }
+
+  function openAuthModal(tab = 'login') {
     const overlay = document.getElementById('auth-gate-overlay');
-    const input = document.getElementById('ig-username-input');
-    const err = document.getElementById('ig-step1-error');
-    const btn = document.getElementById('ig-continue-btn');
     if (overlay) {
       overlay.style.display = 'flex';
-      overlay.hidden = false;
+      overlay.removeAttribute('hidden');
     }
-    if (err) err.style.display = 'none';
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
-    }
-    if (input) {
-      input.value = (localStorage.getItem(AUTH_USER_KEY) || '').replace(/^@+/, '');
-      setTimeout(() => input.focus(), 150);
+    setAuthTab(tab);
+    const savedUser = localStorage.getItem(AUTH_USER_KEY) || '';
+    const loginEmail = document.getElementById('login-email-input');
+    if (loginEmail && savedUser) {
+      loginEmail.value = savedUser;
     }
   }
 
-  function updateIgUserUI() {
-    const user = getLoggedInIgUser();
-    const badge = document.getElementById('ig-user-badge');
-    const display = document.getElementById('ig-user-name-display');
+  const openIgLoginModal = openAuthModal;
+
+  function closeAuthModal() {
+    const overlay = document.getElementById('auth-gate-overlay');
+    if (overlay) {
+      overlay.style.setProperty('display', 'none', 'important');
+      overlay.setAttribute('hidden', '');
+    }
+  }
+
+  function updateAuthUserUI() {
+    const user = getLoggedInGmailUser();
+    const badge = document.getElementById('auth-user-badge') || document.getElementById('ig-user-badge');
+    const display = document.getElementById('auth-user-name-display') || document.getElementById('ig-user-name-display');
     if (badge && display) {
       if (user) {
-        display.textContent = user.startsWith('@') ? user : `@${user}`;
+        display.textContent = user;
         badge.style.display = 'inline-flex';
       } else {
         badge.style.display = 'none';
       }
     }
   }
+
+  const updateIgUserUI = updateAuthUserUI;
 
   // --- US Searches Rate Limit System (2 searches per 5 hours per Instagram User) ---
   const US_LIMIT_HOURS = 5;
@@ -3196,72 +3480,127 @@ textarea {
       });
     }
 
-    // --- Instagram Auth & Gatekeeper Controller ---
+    // --- Gmail Auth & Gatekeeper Controller (Login & Sign Up) ---
     const authOverlay = document.getElementById('auth-gate-overlay');
-    const igForm = document.getElementById('ig-login-form');
-    const igInput = document.getElementById('ig-username-input');
-    const igError = document.getElementById('ig-step1-error');
-    const igBtn = document.getElementById('ig-continue-btn');
-    const btnIgLogout = document.getElementById('btn-ig-logout');
-
-    // Permite nomes de usuário válidos: letras, números, ponto, underline e hífen, de 1 a 35 caracteres
-    const IG_REGEX = /^[a-zA-Z0-9._-]{1,35}$/;
+    const tabBtnLogin = document.getElementById('tab-btn-login');
+    const tabBtnSignup = document.getElementById('tab-btn-signup');
+    const linkToSignup = document.getElementById('link-to-signup');
+    const linkToLogin = document.getElementById('link-to-login');
+    const loginForm = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const btnLogout = document.getElementById('btn-auth-logout') || document.getElementById('btn-ig-logout');
 
     window.executeLeadSearch = executeLeadSearch;
 
-    window.handleIgLoginSubmit = (e) => {
-      if (e && e.preventDefault) e.preventDefault();
-      
-      const raw = (igInput ? igInput.value : '').trim();
-      // Remove URLs completas, @ repetidos, barras e espaços
-      const clean = raw
-        .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '')
-        .replace(/\/.*$/, '')
-        .replace(/^@+/, '')
-        .replace(/\s+/g, '')
-        .trim();
+    if (tabBtnLogin) tabBtnLogin.addEventListener('click', () => setAuthTab('login'));
+    if (tabBtnSignup) tabBtnSignup.addEventListener('click', () => setAuthTab('signup'));
 
-      if (!clean || !IG_REGEX.test(clean)) {
-        if (igError) {
-          igError.textContent = 'Nome de usuário inválido! Digite apenas o seu usuário (ex: seu_perfil).';
-          igError.style.display = 'block';
+    if (linkToSignup) {
+      linkToSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        const loginEmail = document.getElementById('login-email-input');
+        const signupEmail = document.getElementById('signup-email-input');
+        if (loginEmail && signupEmail && loginEmail.value) {
+          signupEmail.value = loginEmail.value;
         }
-        if (igInput) igInput.focus();
+        setAuthTab('signup');
+      });
+    }
+
+    if (linkToLogin) {
+      linkToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        const loginEmail = document.getElementById('login-email-input');
+        const signupEmail = document.getElementById('signup-email-input');
+        if (loginEmail && signupEmail && signupEmail.value) {
+          loginEmail.value = signupEmail.value;
+        }
+        setAuthTab('login');
+      });
+    }
+
+    // Handler de Login
+    window.handleLoginSubmit = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const emailInput = document.getElementById('login-email-input');
+      const passInput = document.getElementById('login-password-input');
+      const errBox = document.getElementById('login-error-msg');
+      const submitBtn = document.getElementById('btn-login-submit');
+
+      const emailVal = (emailInput ? emailInput.value : '').trim();
+      const passVal = (passInput ? passInput.value : '').trim();
+
+      const check = validateGmail(emailVal);
+      if (!check.valid) {
+        if (errBox) {
+          errBox.textContent = check.error;
+          errBox.style.display = 'block';
+        }
+        if (emailInput) emailInput.focus();
         return false;
       }
 
-      if (igError) igError.style.display = 'none';
+      if (!passVal) {
+        if (errBox) {
+          errBox.textContent = 'Digite sua senha para acessar.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
 
-      const finalHandle = `@${clean}`;
+      const accounts = getRegisteredAccounts();
+      const account = accounts[check.email];
 
-      if (igBtn) {
-        igBtn.disabled = true;
-        igBtn.innerHTML = '<span>⏳ Validando perfil no Instagram...</span>';
+      if (!account) {
+        if (errBox) {
+          errBox.innerHTML = `Conta não encontrada com ${check.email}.<br><a href="#" id="err-link-signup" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Clique aqui para criar sua conta (Sign Up)</a>.`;
+          errBox.style.display = 'block';
+          const errLink = document.getElementById('err-link-signup');
+          if (errLink) {
+            errLink.onclick = (ev) => {
+              ev.preventDefault();
+              const signupEmail = document.getElementById('signup-email-input');
+              if (signupEmail) signupEmail.value = check.email;
+              setAuthTab('signup');
+            };
+          }
+        }
+        return false;
+      }
+
+      if (account.password !== passVal) {
+        if (errBox) {
+          errBox.textContent = 'Senha incorreta. Verifique e tente novamente.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Entrando...</span>';
       }
 
       try {
-        localStorage.setItem(AUTH_USER_KEY, finalHandle);
+        localStorage.setItem(AUTH_USER_KEY, check.email);
         localStorage.setItem(AUTH_GRANTED_KEY, 'true');
       } catch (err) {
         console.warn('localStorage error:', err);
       }
 
       setTimeout(() => {
-        const overlay = document.getElementById('auth-gate-overlay') || authOverlay;
-        if (overlay) {
-          overlay.style.setProperty('display', 'none', 'important');
-          overlay.setAttribute('hidden', '');
+        closeAuthModal();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>🔓 Entrar com Gmail</span>';
         }
-
-        if (igBtn) {
-          igBtn.disabled = false;
-          igBtn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
-        }
-
         try {
-          updateIgUserUI();
+          updateAuthUserUI();
           updateUsQuotaUI();
-          showToast(`🎉 Perfil ${finalHandle} validado! Acesso liberado.`);
+          showToast(`🎉 Bem-vindo(a)! Conectado como ${check.email}`);
         } catch (err) {
           console.warn('UI update error:', err);
         }
@@ -3276,15 +3615,113 @@ textarea {
       return false;
     };
 
-    if (igForm) {
-      igForm.addEventListener('submit', window.handleIgLoginSubmit);
-    }
+    // Handler de Sign Up (Cadastro)
+    window.handleSignupSubmit = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const emailInput = document.getElementById('signup-email-input');
+      const passInput = document.getElementById('signup-password-input');
+      const passConfirmInput = document.getElementById('signup-password-confirm');
+      const errBox = document.getElementById('signup-error-msg');
+      const submitBtn = document.getElementById('btn-signup-submit');
 
-    if (btnIgLogout) {
-      btnIgLogout.addEventListener('click', () => {
+      const emailVal = (emailInput ? emailInput.value : '').trim();
+      const passVal = (passInput ? passInput.value : '').trim();
+      const confirmVal = (passConfirmInput ? passConfirmInput.value : '').trim();
+
+      const check = validateGmail(emailVal);
+      if (!check.valid) {
+        if (errBox) {
+          errBox.textContent = check.error;
+          errBox.style.display = 'block';
+        }
+        if (emailInput) emailInput.focus();
+        return false;
+      }
+
+      if (!passVal || passVal.length < 6) {
+        if (errBox) {
+          errBox.textContent = 'A senha precisa ter no mínimo 6 caracteres.';
+          errBox.style.display = 'block';
+        }
+        if (passInput) passInput.focus();
+        return false;
+      }
+
+      if (passVal !== confirmVal) {
+        if (errBox) {
+          errBox.textContent = 'As senhas não conferem. Digite a mesma senha nos dois campos.';
+          errBox.style.display = 'block';
+        }
+        if (passConfirmInput) passConfirmInput.focus();
+        return false;
+      }
+
+      const accounts = getRegisteredAccounts();
+      if (accounts[check.email]) {
+        if (errBox) {
+          errBox.innerHTML = `Este Gmail já está cadastrado.<br><a href="#" id="err-link-login" style="color: #2563eb; font-weight: 700; text-decoration: underline;">Clique aqui para fazer login</a>.`;
+          errBox.style.display = 'block';
+          const errLink = document.getElementById('err-link-login');
+          if (errLink) {
+            errLink.onclick = (ev) => {
+              ev.preventDefault();
+              const loginEmail = document.getElementById('login-email-input');
+              if (loginEmail) loginEmail.value = check.email;
+              setAuthTab('login');
+            };
+          }
+        }
+        return false;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>⏳ Criando conta...</span>';
+      }
+
+      // Salva a conta criada
+      saveRegisteredAccount(check.email, passVal);
+
+      try {
+        localStorage.setItem(AUTH_USER_KEY, check.email);
+        localStorage.setItem(AUTH_GRANTED_KEY, 'true');
+      } catch (err) {
+        console.warn('localStorage error:', err);
+      }
+
+      setTimeout(() => {
+        closeAuthModal();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>✨ Criar Conta e Liberar Acesso</span>';
+        }
+        try {
+          updateAuthUserUI();
+          updateUsQuotaUI();
+          showToast(`🎉 Conta criada com sucesso! Bem-vindo(a), ${check.email}`);
+        } catch (err) {
+          console.warn('UI update error:', err);
+        }
+
+        try {
+          executeLeadSearch();
+        } catch (err) {
+          console.error('executeLeadSearch error:', err);
+        }
+      }, 300);
+
+      return false;
+    };
+
+    if (loginForm) loginForm.addEventListener('submit', window.handleLoginSubmit);
+    if (signupForm) signupForm.addEventListener('submit', window.handleSignupSubmit);
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
         localStorage.removeItem(AUTH_GRANTED_KEY);
-        updateIgUserUI();
-        openIgLoginModal();
+        updateAuthUserUI();
+        openAuthModal('login');
         showToast('Você saiu da sua conta.');
       });
     }
