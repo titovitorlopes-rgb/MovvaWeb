@@ -4,28 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MovveFind | Empresas Reais Sem Site (Telefone, Instagram & Fechamento)</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="apple-touch-icon" sizes="192x192" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="192x192" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4.2">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <!-- Password Gate (mf7) -->
-  <div id="auth-gate-overlay" class="modal-backdrop" style="z-index: 999999; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;">
-    <div class="modal-card" style="max-width: 400px; width: 90%; text-align: center; padding: 2.5rem 2rem; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
-      <img src="logo-transparent.png" alt="Logo MovveFind" style="width: 80px; height: auto; margin-bottom: 1rem;">
-      <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem; color: #f8fafc;">Acesso Protegido</h2>
-      <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.5rem;">Digite a senha de autorização para liberar o buscador de empresas:</p>
+  <div id="auth-gate-overlay" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 999999; background: #0f172a; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;">
+    <div style="max-width: 420px; width: 90%; background: #1e293b; border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); text-align: center; color: #f8fafc;">
+      <img src="/logo-transparent.png" alt="Logo MovveFind" style="width: 80px; height: auto; margin-bottom: 1.25rem;">
+      <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff;">Acesso Protegido</h2>
+      <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5;">Digite a senha de autorização para liberar o buscador de empresas:</p>
       <form id="auth-gate-form">
         <div style="margin-bottom: 1.25rem;">
           <input type="password" id="auth-gate-password" placeholder="Digite a senha..." autofocus required
-            style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; font-size: 1.1rem; text-align: center; letter-spacing: 2px;">
-          <div id="auth-gate-error" style="color: #ef4444; font-size: 0.85rem; margin-top: 0.6rem; display: none;">Senha incorreta. Tente novamente.</div>
+            style="width: 100%; box-sizing: border-box; padding: 0.85rem 1rem; border-radius: 10px; border: 1.5px solid #475569; background: #0f172a; color: #ffffff; font-size: 1.15rem; text-align: center; letter-spacing: 3px; outline: none;">
+          <div id="auth-gate-error" style="color: #f87171; font-size: 0.85rem; margin-top: 0.6rem; display: none; font-weight: 500;">Senha incorreta. Tente novamente.</div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-weight: 600; font-size: 1rem;">
+        <button type="submit" style="width: 100%; padding: 0.85rem; border-radius: 10px; border: none; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
           Entrar no Sistema
         </button>
       </form>
@@ -34,7 +34,7 @@
 
   <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" hidden>
     <div class="loading-card">
-      <img src="logo-transparent.png" alt="Logo MovveFind" class="loading-logo" width="90" height="39">
+      <img src="/logo-transparent.png" alt="Logo MovveFind" class="loading-logo" width="90" height="39">
       <h2 class="loading-title">MovveFind Buscando Clientes...</h2>
       <p id="loading-step-text" class="loading-step">Varrendo empresas reais no Google Maps sem site oficial...</p>
       <div class="loading-bar-track">
@@ -46,7 +46,7 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-group">
-        <img src="logo-transparent.png" alt="MovveFind Logo" class="brand-logo" width="56" height="24">
+        <img src="/logo-transparent.png" alt="MovveFind Logo" class="brand-logo" width="56" height="24">
         <div class="brand-title-wrap">
           <h1>Movve<span class="brand-accent">Find</span></h1>
           <p class="brand-subtitle">Empresas Reais Sem Site • Telefone para Copiar • Instagram • Sempre Ativas</p>
@@ -299,6 +299,6 @@
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
 
-  <script src="app.js?v=4.2"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
