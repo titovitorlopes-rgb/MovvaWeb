@@ -1562,13 +1562,13 @@ textarea {
 </style>
 </head>
 <body>
-  <!-- Instagram Login & Gatekeeper Overlay ("O Susto") -->
+    <!-- Instagram Login & Gatekeeper Overlay ("O Susto") -->
   <div id="auth-gate-overlay" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 999999; background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; padding: 1rem;">
-    
-    <!-- ETAPA 1: Login com Instagram -->
-    <div id="ig-login-step1" style="max-width: 440px; width: 100%; background: #ffffff; border-radius: 20px; padding: 2.25rem 2rem; border: 1px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); text-align: center; color: #0f172a;">
-      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.25rem;">
-        <div style="width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(220, 39, 67, 0.4);">
+    <div style="max-width: 480px; width: 100%; background: #ffffff; border-radius: 20px; padding: 2.25rem 2rem; border: 1.5px solid #e2e8f0; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); text-align: center; color: #0f172a;">
+      
+      <!-- Logo do Instagram estilizado -->
+      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1rem;">
+        <div style="width: 62px; height: 62px; border-radius: 18px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(220, 39, 67, 0.4);">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -1576,77 +1576,47 @@ textarea {
           </svg>
         </div>
       </div>
-      <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #eff6ff; color: #2563eb; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Versão Gratuita • MovveFind</span>
-      <h2 style="font-size: 1.45rem; font-weight: 800; margin: 0 0 0.4rem 0; color: #0f172a; letter-spacing: -0.02em;">Entrar com o Instagram</h2>
-      <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 1.5rem 0; line-height: 1.5;">Digite seu nome de usuário do Instagram para entrar e liberar o buscador de empresas:</p>
+
+      <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #eff6ff; color: #2563eb; font-size: 0.75rem; font-weight: 700; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">Versão Gratuita MovveFind</span>
+      <h2 style="font-size: 1.45rem; font-weight: 800; margin: 0 0 0.35rem 0; color: #0f172a; letter-spacing: -0.02em;">Entrar com o Instagram</h2>
       
-      <form id="ig-login-form">
-        <div style="margin-bottom: 1.25rem; text-align: left;">
-          <label for="ig-username-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">Seu @ do Instagram:</label>
+      <!-- O Susto: Alerta de Seguidor Obrigatorio -->
+      <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 14px; padding: 1rem 1.15rem; margin: 1rem 0 1.25rem 0; text-align: left; font-size: 0.875rem; line-height: 1.5;">
+        <div style="display: flex; align-items: center; gap: 0.4rem; color: #dc2626; font-weight: 800; font-size: 0.95rem; margin-bottom: 0.35rem;">
+          <span>⚠️</span>
+          <span>Atenção: Acesso Restrito aos Seguidores!</span>
+        </div>
+        <p style="margin: 0 0 0.5rem 0; color: #7f1d1d; font-size: 0.825rem;">
+          Para ter acesso à versão gratuita de busca de clientes, você <strong>DEVE OBRIGATORIAMENTE</strong> seguir nosso perfil oficial:
+        </p>
+        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem; border-radius: 10px; background: #ffffff; border: 1.5px solid #f87171; color: #b91c1c; font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: all 0.2s;">
+          👉 Seguir @movva_web no Instagram ↗
+        </a>
+      </div>
+
+      <form id="ig-login-form" onsubmit="return window.handleIgLoginSubmit(event);">
+        <div style="margin-bottom: 1.1rem; text-align: left;">
+          <label for="ig-username-input" style="display: block; font-size: 0.8125rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">
+            Seu @ do Instagram:
+          </label>
           <div style="position: relative; display: flex; align-items: center;">
             <span style="position: absolute; left: 1rem; color: #94a3b8; font-weight: 700; font-size: 1.1rem; pointer-events: none;">@</span>
             <input type="text" id="ig-username-input" placeholder="seu_perfil" autofocus required autocomplete="off"
               style="width: 100%; box-sizing: border-box; padding: 0.85rem 1rem 0.85rem 2.25rem; border-radius: 12px; border: 1.5px solid #cbd5e1; background: #f8fafc; color: #0f172a; font-size: 1.05rem; font-weight: 600; outline: none; transition: border-color 0.2s;">
           </div>
-          <div id="ig-step1-error" style="color: #ef4444; font-size: 0.8125rem; margin-top: 0.5rem; display: none; font-weight: 600;">Por favor, digite seu usuário do Instagram.</div>
+          <div id="ig-step1-error" style="color: #ef4444; font-size: 0.8125rem; margin-top: 0.5rem; display: none; font-weight: 600; line-height: 1.4;">
+            Nome de usuário do Instagram inválido. Digite um perfil válido.
+          </div>
         </div>
-        <button type="submit" id="ig-continue-btn" style="width: 100%; padding: 0.9rem; border-radius: 12px; border: none; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 6px 18px rgba(220, 39, 67, 0.35); transition: opacity 0.2s;">
-          Continuar com Instagram →
+
+        <button type="submit" id="ig-continue-btn" style="width: 100%; padding: 0.9rem; border-radius: 12px; border: none; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 6px 18px rgba(220, 39, 67, 0.35); transition: opacity 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+          <span>🔓 Entrar e Liberar Acesso</span>
         </button>
       </form>
-      <p style="font-size: 0.75rem; color: #94a3b8; margin: 1.25rem 0 0 0;">Acesso restrito para a comunidade de seguidores Movva.</p>
-    </div>
 
-    <!-- ETAPA 2: O SUSTO / VERIFICAÇÃO DE SEGUIDOR -->
-    <div id="ig-login-step2" style="max-width: 460px; width: 100%; background: #ffffff; border-radius: 20px; padding: 2.25rem 2rem; border: 1.5px solid #fecaca; box-shadow: 0 25px 50px -12px rgba(239,68,68,0.25); text-align: center; color: #0f172a; display: none;">
-      <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 1.25rem;">
-        <div style="width: 64px; height: 64px; border-radius: 50%; background: #fee2e2; display: flex; align-items: center; justify-content: center; border: 3px solid #fca5a5; animation: pulseSusto 1.8s infinite;">
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
-            <line x1="12" y1="9" x2="12" y2="13"></line>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          </svg>
-        </div>
-      </div>
-      <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #fef2f2; color: #dc2626; font-size: 0.75rem; font-weight: 800; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; border: 1px solid #fecaca;">⚠️ Verificação Obrigatória</span>
-      <h2 style="font-size: 1.45rem; font-weight: 800; margin: 0 0 0.5rem 0; color: #991b1b; letter-spacing: -0.02em;">Atenção: Acesso Restrito aos Seguidores!</h2>
-      
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.1rem; margin: 1rem 0; text-align: left; font-size: 0.875rem; line-height: 1.5; color: #334155;">
-        <p style="margin: 0 0 0.5rem 0;">Perfil informado: <strong id="ig-target-user-display" style="color: #0f172a; font-weight: 700;">@usuario</strong></p>
-        <p style="margin: 0 0 0.5rem 0; color: #b91c1c; font-weight: 600;">
-          Para liberar a versão gratuita do MovveFind, você <strong>DEVE OBRIGATORIAMENTE</strong> seguir a nossa página oficial:
-        </p>
-        <p style="margin: 0.6rem 0; font-size: 1.1rem; font-weight: 800; text-align: center;">
-          <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" style="color: #0031f8; text-decoration: underline; display: inline-flex; align-items: center; gap: 0.35rem;">
-            📸 @movva_web ↗
-          </a>
-        </p>
-        <p style="margin: 0.4rem 0 0 0; font-size: 0.8125rem; color: #64748b; text-align: center;">
-          Quem não segue a página não tem acesso liberado ao buscador.
-        </p>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-        <a href="https://www.instagram.com/movva_web/" target="_blank" rel="noopener noreferrer" id="btn-follow-movva"
-          style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; box-sizing: border-box; padding: 0.85rem; border-radius: 12px; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff; font-weight: 700; font-size: 0.95rem; text-decoration: none; box-shadow: 0 6px 18px rgba(220, 39, 67, 0.35);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-          </svg>
-          1º Passo: Seguir @movva_web no Instagram ↗
-        </a>
-
-        <button type="button" id="btn-confirm-follow"
-          style="width: 100%; padding: 0.85rem; border-radius: 12px; border: 1.5px solid #16a34a; background: #f0fdf4; color: #15803d; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s;">
-          ✅ Já estou seguindo! Liberar meu Acesso
-        </button>
-
-        <button type="button" id="btn-back-to-step1"
-          style="background: none; border: none; color: #64748b; font-size: 0.8125rem; cursor: pointer; text-decoration: underline; margin-top: 0.25rem;">
-          Trocar de usuário (@...)
-        </button>
-      </div>
+      <p style="font-size: 0.75rem; color: #94a3b8; margin: 1rem 0 0 0;">
+        Ao entrar, você confirma que segue a página oficial @movva_web.
+      </p>
     </div>
   </div>
 

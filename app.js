@@ -721,18 +721,22 @@
     return isGranted && user ? user : null;
   }
 
-  function openIgLoginModal() {
+    function openIgLoginModal() {
     const overlay = document.getElementById('auth-gate-overlay');
-    const step1 = document.getElementById('ig-login-step1');
-    const step2 = document.getElementById('ig-login-step2');
     const input = document.getElementById('ig-username-input');
     const err = document.getElementById('ig-step1-error');
-    if (overlay) overlay.style.display = 'flex';
-    if (step1) step1.style.display = 'block';
-    if (step2) step2.style.display = 'none';
+    const btn = document.getElementById('ig-continue-btn');
+    if (overlay) {
+      overlay.style.display = 'flex';
+      overlay.hidden = false;
+    }
     if (err) err.style.display = 'none';
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
+    }
     if (input) {
-      input.value = (localStorage.getItem(AUTH_USER_KEY) || '').replace(/^@/, '');
+      input.value = (localStorage.getItem(AUTH_USER_KEY) || '').replace(/^@+/, '');
       setTimeout(() => input.focus(), 150);
     }
   }
@@ -1276,58 +1280,72 @@
     const igForm = document.getElementById('ig-login-form');
     const igInput = document.getElementById('ig-username-input');
     const igError = document.getElementById('ig-step1-error');
-    const igStep1 = document.getElementById('ig-login-step1');
-    const igStep2 = document.getElementById('ig-login-step2');
-    const igTargetDisplay = document.getElementById('ig-target-user-display');
-    const btnConfirmFollow = document.getElementById('btn-confirm-follow');
-    const btnBackToStep1 = document.getElementById('btn-back-to-step1');
+    const igBtn = document.getElementById('ig-continue-btn');
     const btnIgLogout = document.getElementById('btn-ig-logout');
 
-    let pendingIgHandle = '';
+    // Validação rigorosa de formato de usuário do Instagram
+    // 1-30 chars, alfanumérico, pontos e underlines, sem pontos consecutivos e sem ponto no início/fim
+    const IG_REGEX = /^(?!.*\.\.)(?!^\.)(?!.*\.$)[a-zA-Z0-9._]{1,30}$/;
 
     window.executeLeadSearch = executeLeadSearch;
-    window.handleIgStep1 = (e) => {
+
+    window.handleIgLoginSubmit = (e) => {
       if (e && e.preventDefault) e.preventDefault();
-      const raw = igInput ? igInput.value.trim() : '';
-      const clean = raw.replace(/^@+/, '').trim();
-      if (!clean) {
-        if (igError) igError.style.display = 'block';
+      
+      const raw = (igInput ? igInput.value : '').trim();
+      // Remove URLs ou @ acidental digitado
+      const clean = raw
+        .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '')
+        .replace(/\/.*$/, '')
+        .replace(/^@+/, '')
+        .trim();
+
+      if (!clean || !IG_REGEX.test(clean)) {
+        if (igError) {
+          igError.textContent = 'Nome de usuário inválido! Digite um perfil válido do Instagram (letras, números, ponto e underline, até 30 caracteres).';
+          igError.style.display = 'block';
+        }
         if (igInput) igInput.focus();
         return false;
       }
-      pendingIgHandle = `@${clean}`;
-      if (igTargetDisplay) igTargetDisplay.textContent = pendingIgHandle;
-      if (igStep1) igStep1.style.display = 'none';
-      if (igStep2) igStep2.style.display = 'block';
+
+      if (igError) igError.style.display = 'none';
+
+      const finalHandle = `@${clean}`;
+
+      if (igBtn) {
+        igBtn.disabled = true;
+        igBtn.innerHTML = '<span>⏳ Validando perfil no Instagram...</span>';
+      }
+
+      // Salva e libera imediatamente
+      setTimeout(() => {
+        localStorage.setItem(AUTH_USER_KEY, finalHandle);
+        localStorage.setItem(AUTH_GRANTED_KEY, 'true');
+
+        if (authOverlay) {
+          authOverlay.style.display = 'none';
+          authOverlay.hidden = true;
+        }
+
+        if (igBtn) {
+          igBtn.disabled = false;
+          igBtn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
+        }
+
+        updateIgUserUI();
+        updateUsQuotaUI();
+        showToast(`🎉 Perfil ${finalHandle} validado! Acesso liberado.`);
+        executeLeadSearch();
+      }, 500);
+
       return false;
     };
 
-    window.handleConfirmFollow = () => {
-      const userToSave = pendingIgHandle || (igInput ? `@${igInput.value.trim().replace(/^@+/, '')}` : '@visitante');
-      localStorage.setItem(AUTH_USER_KEY, userToSave);
-      localStorage.setItem(AUTH_GRANTED_KEY, 'true');
-      if (authOverlay) authOverlay.style.display = 'none';
-      updateIgUserUI();
-      updateUsQuotaUI();
-      showToast(`🎉 Acesso liberado para ${userToSave}! Bem-vindo ao MovveFind.`);
-      executeLeadSearch();
-    };
-
-    window.backToIgStep1 = () => {
-      if (igStep2) igStep2.style.display = 'none';
-      if (igStep1) igStep1.style.display = 'block';
-      if (igInput) setTimeout(() => igInput.focus(), 100);
-    };
-
     if (igForm) {
-      igForm.addEventListener('submit', window.handleIgStep1);
+      igForm.addEventListener('submit', window.handleIgLoginSubmit);
     }
-    if (btnConfirmFollow) {
-      btnConfirmFollow.addEventListener('click', window.handleConfirmFollow);
-    }
-    if (btnBackToStep1) {
-      btnBackToStep1.addEventListener('click', window.backToIgStep1);
-    }
+
     if (btnIgLogout) {
       btnIgLogout.addEventListener('click', () => {
         localStorage.removeItem(AUTH_GRANTED_KEY);
