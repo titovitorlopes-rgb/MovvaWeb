@@ -1283,9 +1283,8 @@
     const igBtn = document.getElementById('ig-continue-btn');
     const btnIgLogout = document.getElementById('btn-ig-logout');
 
-    // Validação rigorosa de formato de usuário do Instagram
-    // 1-30 chars, alfanumérico, pontos e underlines, sem pontos consecutivos e sem ponto no início/fim
-    const IG_REGEX = /^(?!.*\.\.)(?!^\.)(?!.*\.$)[a-zA-Z0-9._]{1,30}$/;
+    // Permite nomes de usuário válidos: letras, números, ponto, underline e hífen, de 1 a 35 caracteres
+    const IG_REGEX = /^[a-zA-Z0-9._-]{1,35}$/;
 
     window.executeLeadSearch = executeLeadSearch;
 
@@ -1293,16 +1292,17 @@
       if (e && e.preventDefault) e.preventDefault();
       
       const raw = (igInput ? igInput.value : '').trim();
-      // Remove URLs ou @ acidental digitado
+      // Remove URLs completas, @ repetidos, barras e espaços
       const clean = raw
         .replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, '')
         .replace(/\/.*$/, '')
         .replace(/^@+/, '')
+        .replace(/\s+/g, '')
         .trim();
 
       if (!clean || !IG_REGEX.test(clean)) {
         if (igError) {
-          igError.textContent = 'Nome de usuário inválido! Digite um perfil válido do Instagram (letras, números, ponto e underline, até 30 caracteres).';
+          igError.textContent = 'Nome de usuário inválido! Digite apenas o seu usuário (ex: seu_perfil).';
           igError.style.display = 'block';
         }
         if (igInput) igInput.focus();
@@ -1318,14 +1318,18 @@
         igBtn.innerHTML = '<span>⏳ Validando perfil no Instagram...</span>';
       }
 
-      // Salva e libera imediatamente
-      setTimeout(() => {
+      try {
         localStorage.setItem(AUTH_USER_KEY, finalHandle);
         localStorage.setItem(AUTH_GRANTED_KEY, 'true');
+      } catch (err) {
+        console.warn('localStorage error:', err);
+      }
 
-        if (authOverlay) {
-          authOverlay.style.display = 'none';
-          authOverlay.hidden = true;
+      setTimeout(() => {
+        const overlay = document.getElementById('auth-gate-overlay') || authOverlay;
+        if (overlay) {
+          overlay.style.setProperty('display', 'none', 'important');
+          overlay.setAttribute('hidden', '');
         }
 
         if (igBtn) {
@@ -1333,11 +1337,20 @@
           igBtn.innerHTML = '<span>🔓 Entrar e Liberar Acesso</span>';
         }
 
-        updateIgUserUI();
-        updateUsQuotaUI();
-        showToast(`🎉 Perfil ${finalHandle} validado! Acesso liberado.`);
-        executeLeadSearch();
-      }, 500);
+        try {
+          updateIgUserUI();
+          updateUsQuotaUI();
+          showToast(`🎉 Perfil ${finalHandle} validado! Acesso liberado.`);
+        } catch (err) {
+          console.warn('UI update error:', err);
+        }
+
+        try {
+          executeLeadSearch();
+        } catch (err) {
+          console.error('executeLeadSearch error:', err);
+        }
+      }, 300);
 
       return false;
     };
