@@ -1494,3 +1494,61 @@ textarea {
   line-height: 1.6;
 }
 
+@keyframes pulseSusto {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 0 12px rgba(220, 38, 38, 0);
+  }
+}
+
+.ig-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.ig-user-pill .ig-badge-icon {
+  font-size: 0.95rem;
+}
+
+.ig-user-pill .btn-ig-logout {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding-left: 0.2rem;
+}
+
+.ig-user-pill .btn-ig-logout:hover {
+  color: #dc2626;
+}
+
+.us-quota-info-banner {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: #1e40af;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+

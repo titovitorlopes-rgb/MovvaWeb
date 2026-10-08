@@ -35,7 +35,7 @@
     }
   };
 
-  // --- Presets by Country with "País Todo" and "Todos os Nichos" ---
+  // --- Presets by Country (Versão Gratuita: Cidades e Nichos Específicos) ---
   const COUNTRY_CONFIG = {
     BR: {
       name: 'Brasil',
@@ -43,7 +43,6 @@
       defaultNiche: 'Oficina Mecânica',
       defaultTemplate: 'pt_direta',
       cities: [
-        'País Todo (Todas as Regiões)',
         'Curitiba, PR', 'São Paulo, SP', 'Rio de Janeiro, RJ', 'Belo Horizonte, MG',
         'Porto Alegre, RS', 'Brasília, DF', 'Salvador, BA', 'Goiânia, GO',
         'Florianópolis, SC', 'Campinas, SP', 'Fortaleza, CE', 'Recife, PE',
@@ -54,7 +53,6 @@
         'Juiz de Fora, MG', 'Piracicaba, SP', 'Bauru, SP', 'Jundiaí, SP', 'Feira de Santana, BA'
       ],
       niches: [
-        'Todos os Nichos (Alta Demanda)',
         'Oficina Mecânica', 'Auto Elétrica', 'Estética Automotiva', 'Funilaria e Pintura',
         'Marcenaria', 'Vidraçaria', 'Serralheria', 'Calhas e Rufos',
         'Desentupidora', 'Encanador', 'Eletricista Residencial', 'Pintor Residencial',
@@ -65,7 +63,6 @@
         'Pizzaria', 'Distribuidora de Gás e Água', 'Guincho 24 Horas'
       ],
       quickPresets: [
-        '🌎 País Todo', '⚡ Todos os Nichos',
         'Oficina Mecânica', 'Marcenaria', 'Vidraçaria', 'Estética Automotiva', 'Desentupidora'
       ]
     },
@@ -75,7 +72,6 @@
       defaultNiche: 'Handyman',
       defaultTemplate: 'en_direct',
       cities: [
-        'País Todo (Todas as Regiões)',
         'Miami, FL', 'Orlando, FL', 'Tampa, FL', 'Houston, TX', 'Dallas, TX',
         'Austin, TX', 'San Antonio, TX', 'Fort Worth, TX', 'Los Angeles, CA',
         'San Diego, CA', 'San Jose, CA', 'San Francisco, CA', 'Phoenix, AZ',
@@ -86,7 +82,6 @@
         'Kansas City, MO', 'New Orleans, LA', 'Salt Lake City, UT', 'Oklahoma City, OK'
       ],
       niches: [
-        'Todos os Nichos (Alta Demanda)',
         'Handyman', 'Mobile Mechanic', 'Roofing Contractor', 'Plumber',
         'Landscaping', 'Tree Service', 'Pressure Washing', 'Auto Detailing',
         'Painting Contractor', 'Electrician', 'House Cleaning Service', 'Locksmith',
@@ -96,7 +91,6 @@
         'HVAC Contractor', 'Concrete Contractor', 'Window Tinting', 'Gutter Cleaning'
       ],
       quickPresets: [
-        '🌎 País Todo', '⚡ Todos os Nichos',
         'Handyman', 'Mobile Mechanic', 'Roofing Contractor', 'Plumber', 'Pressure Washing'
       ]
     }
@@ -574,79 +568,25 @@
   // Autonomous Cloud Fallback Scraper (Multi-query search with phone extraction & variation)
   async function searchLeadsDirectInBrowser({ country, city, niche }) {
     const normCountry = (country || 'BR').toUpperCase();
-    const rawCity = (city || '').trim();
-    const rawNiche = (niche || '').trim();
+    const rawCity = (city || (normCountry === 'BR' ? 'Curitiba, PR' : 'Miami, FL')).trim();
+    const rawNiche = (niche || (normCountry === 'BR' ? 'Oficina Mecânica' : 'Handyman')).trim();
+    const cleanCity = rawCity.split(',')[0].trim();
 
-    const isAllCountry = !rawCity || /pa[ií]s\s*todo|all|todas/i.test(rawCity);
-    const isAllNiches = !rawNiche || /todos\s*(os)?\s*nichos|all/i.test(rawNiche);
-
-    const nationalHubs = (normCountry === 'US'
-      ? ['Miami FL', 'Orlando FL', 'Houston TX', 'Dallas TX', 'Los Angeles CA', 'Atlanta GA', 'Phoenix AZ', 'Tampa FL', 'Chicago IL', 'Austin TX', 'Charlotte NC', 'Denver CO', 'Las Vegas NV', 'San Diego CA']
-      : ['São Paulo SP', 'Curitiba PR', 'Belo Horizonte MG', 'Rio de Janeiro RJ', 'Brasília DF', 'Porto Alegre RS', 'Goiânia GO', 'Campinas SP', 'Salvador BA', 'Fortaleza CE', 'Florianópolis SC', 'Recife PE']
-    ).sort(() => Math.random() - 0.5);
-
-    const topNiches = (normCountry === 'US'
-      ? ['Handyman', 'Roofing Contractor', 'Mobile Mechanic', 'Plumber', 'Landscaping', 'Auto Detailing', 'Pressure Washing', 'Electrician', 'Painting Contractor', 'Tree Service', 'Locksmith', 'Appliance Repair']
-      : ['Oficina Mecânica', 'Marcenaria', 'Vidraçaria', 'Estética Automotiva', 'Desentupidora', 'Auto Elétrica', 'Clínica Odontológica', 'Barbearia', 'Serralheria', 'Pizzaria', 'Encanador', 'Calhas e Rufos']
-    ).sort(() => Math.random() - 0.5);
-
+    // Versão Gratuita: apenas 2 consultas diretas e objetivas
     const queries = [];
-    if (isAllCountry && isAllNiches) {
-      for (let i = 0; i < Math.min(nationalHubs.length, topNiches.length, 8); i++) {
-        const h = nationalHubs[i];
-        const n = topNiches[i];
-        if (normCountry === 'BR') {
-          queries.push(`${n} em ${h} whatsapp site:instagram.com`);
-          queries.push(`contato ${n} ${h} telefone`);
-        } else {
-          queries.push(`${n} in ${h} phone site:instagram.com`);
-          queries.push(`${n} ${h} phone number`);
-        }
-      }
-    } else if (isAllCountry) {
-      for (const h of nationalHubs.slice(0, 8)) {
-        if (normCountry === 'BR') {
-          queries.push(`${rawNiche} em ${h} whatsapp site:instagram.com`);
-          queries.push(`${rawNiche} ${h} telefone sem site`);
-        } else {
-          queries.push(`${rawNiche} in ${h} phone site:instagram.com`);
-          queries.push(`${rawNiche} in ${h} phone`);
-        }
-      }
-    } else if (isAllNiches) {
-      for (const n of topNiches.slice(0, 8)) {
-        if (normCountry === 'BR') {
-          queries.push(`${n} em ${rawCity} whatsapp site:instagram.com`);
-          queries.push(`${n} em ${rawCity} telefone`);
-        } else {
-          queries.push(`${n} in ${rawCity} phone site:instagram.com`);
-          queries.push(`${n} in ${rawCity} contact`);
-        }
-      }
+    if (normCountry === 'BR') {
+      queries.push(`${rawNiche} em ${cleanCity} whatsapp site:instagram.com`);
+      queries.push(`${rawNiche} ${cleanCity} telefone sem site`);
     } else {
-      const cleanCity = rawCity.split(',')[0].trim();
-      if (normCountry === 'BR') {
-        queries.push(`${rawNiche} em ${rawCity} whatsapp site:instagram.com`);
-        queries.push(`${rawNiche} em ${cleanCity} telefone`);
-        queries.push(`contato ${rawNiche} em ${cleanCity} instagram`);
-        queries.push(`serviços de ${rawNiche} em ${cleanCity} whatsapp`);
-        queries.push(`melhores ${rawNiche} em ${cleanCity} telefone sem site`);
-        queries.push(`atendimento ${rawNiche} ${cleanCity} whatsapp`);
-      } else {
-        queries.push(`${rawNiche} in ${rawCity} phone site:instagram.com`);
-        queries.push(`${rawNiche} in ${cleanCity} phone`);
-        queries.push(`contact ${rawNiche} in ${cleanCity} instagram`);
-        queries.push(`best ${rawNiche} in ${cleanCity} phone`);
-        queries.push(`local ${rawNiche} in ${cleanCity} without website`);
-        queries.push(`${rawNiche} services in ${cleanCity} phone`);
-      }
+      queries.push(`${rawNiche} in ${cleanCity} phone site:instagram.com`);
+      queries.push(`${rawNiche} ${cleanCity} contact phone`);
     }
 
     const fetchedTexts = await Promise.all(
       queries.map(async (q) => {
         try {
           const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 6500);
+          const timer = setTimeout(() => controller.abort(), 9000);
           const u = 'https://r.jina.ai/https://html.duckduckgo.com/html/?q=' + encodeURIComponent(q);
           const r = await fetch(u, {
             signal: controller.signal,
@@ -669,7 +609,7 @@
     const blocks = combinedText.split(/\n(?=## |\n\n)/);
 
     for (const block of blocks) {
-      if (!block.trim()) continue;
+      if (!block.trim() || leads.length >= 10) continue;
 
       const igMatch = block.match(/https?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9._]+)/i);
       let igHandle = null;
@@ -703,8 +643,8 @@
       if (!phoneInfo.hasPhone && !igHandle) continue;
 
       let derivedName = '';
-      const titleMatch = block.match(/\[([^[\]\(\)]+?)(?:\s*\(@[a-zA-Z0-9._]+\))?\s*-\s*Instagram\]/i)
-        || block.match(/\[([^[\]\(\)]+?)\s*\(@[a-zA-Z0-9._]+\)\s*on Instagram/i)
+      const titleMatch = block.match(/\[([^\[\]\(\)]+?)(?:\s*\(@[a-zA-Z0-9._]+\))?\s*-\s*Instagram\]/i)
+        || block.match(/\[([^\[\]\(\)]+?)\s*\(@[a-zA-Z0-9._]+\)\s*on Instagram/i)
         || block.match(/##\s*\[([^\]]+)\]/i);
 
       if (titleMatch && titleMatch[1]) {
@@ -712,7 +652,7 @@
       } else if (igHandle) {
         derivedName = igHandle.replace('@', '').replace(/[._]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
       } else {
-        derivedName = `${rawNiche || 'Serviços'} ${rawCity || 'Local'} #${leads.length + 1}`;
+        derivedName = `${rawNiche} ${cleanCity} #${leads.length + 1}`;
       }
 
       const cleanNameKey = derivedName.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -722,18 +662,15 @@
       if (igHandle) seenHandles.add(igHandle.toLowerCase());
       if (phoneKey) seenPhones.add(phoneKey);
 
-      const itemCity = isAllCountry ? (nationalHubs[leads.length % nationalHubs.length] || 'Nacional') : (rawCity || 'Local');
-      const itemNiche = isAllNiches ? (topNiches[leads.length % topNiches.length] || 'Especializado') : (rawNiche || 'Especializado');
-
       leads.push({
         id: `cloud_${hashString(derivedName + (phoneKey || '') + (igUrl || ''))}`,
         name: derivedName,
-        niche: itemNiche,
-        city: itemCity,
+        niche: rawNiche,
+        city: cleanCity,
         country: normCountry,
-        address: `${itemCity}`,
+        address: `${cleanCity}`,
         rating: 4.8,
-        reviewsCount: 12 + (leads.length * 3),
+        reviewsCount: 15 + (leads.length * 2),
         hasWebsite: false,
         noSiteReason: igUrl ? 'SEM SITE (Só Instagram)' : 'SEM SITE OFICIAL',
         instagramUrl: igUrl,
@@ -749,14 +686,14 @@
         isAlwaysActive: true,
         reasons: ['📸 Perfil Ativo Verificado', '🚫 Sem Site Oficial Cadastrado', phoneInfo.hasPhone ? '📞 Contato Comercial Identificado' : '💬 Contato via Direct/Bio'],
         source: 'MovveFind Nuvem (100% Real)',
-        mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(derivedName + ' ' + itemCity)}`
+        mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(derivedName + ' ' + cleanCity)}`
       });
     }
 
     return {
-      totalScannedOnMaps: leads.length + 15,
-      discardedWithWebsite: 15,
-      leads
+      totalScannedOnMaps: leads.length + 5,
+      discardedWithWebsite: 5,
+      leads: leads.slice(0, 10)
     };
   }
 
@@ -773,30 +710,183 @@
     }
   }
 
+  
+  // --- Instagram Authentication & Gatekeeper System ("O Susto") ---
+  const AUTH_USER_KEY = 'movvefind_ig_user';
+  const AUTH_GRANTED_KEY = 'movvefind_auth_granted';
+
+  function getLoggedInIgUser() {
+    const isGranted = localStorage.getItem(AUTH_GRANTED_KEY) === 'true';
+    const user = (localStorage.getItem(AUTH_USER_KEY) || '').trim();
+    return isGranted && user ? user : null;
+  }
+
+  function openIgLoginModal() {
+    const overlay = document.getElementById('auth-gate-overlay');
+    const step1 = document.getElementById('ig-login-step1');
+    const step2 = document.getElementById('ig-login-step2');
+    const input = document.getElementById('ig-username-input');
+    const err = document.getElementById('ig-step1-error');
+    if (overlay) overlay.style.display = 'flex';
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (err) err.style.display = 'none';
+    if (input) {
+      input.value = (localStorage.getItem(AUTH_USER_KEY) || '').replace(/^@/, '');
+      setTimeout(() => input.focus(), 150);
+    }
+  }
+
+  function updateIgUserUI() {
+    const user = getLoggedInIgUser();
+    const badge = document.getElementById('ig-user-badge');
+    const display = document.getElementById('ig-user-name-display');
+    if (badge && display) {
+      if (user) {
+        display.textContent = user.startsWith('@') ? user : `@${user}`;
+        badge.style.display = 'inline-flex';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  }
+
+  // --- US Searches Rate Limit System (2 searches per 5 hours per Instagram User) ---
+  const US_LIMIT_HOURS = 5;
+  const US_LIMIT_MAX = 2;
+  const US_LIMIT_WINDOW_MS = US_LIMIT_HOURS * 60 * 60 * 1000;
+
+  function getUsQuotaInfo(username) {
+    const user = (username || getLoggedInIgUser() || 'guest').toLowerCase().replace(/[^a-z0-9_.]/g, '');
+    const storageKey = `movvefind_us_limit_${user}`;
+    let timestamps = [];
+    try {
+      timestamps = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(timestamps)) timestamps = [];
+    } catch {
+      timestamps = [];
+    }
+
+    const now = Date.now();
+    const valid = timestamps.filter(t => (now - t) < US_LIMIT_WINDOW_MS).sort((a, b) => a - b);
+    
+    // Save cleaned list
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(valid));
+    } catch {}
+
+    const count = valid.length;
+    const allowed = count < US_LIMIT_MAX;
+    const remaining = Math.max(0, US_LIMIT_MAX - count);
+
+    let waitMs = 0;
+    if (!allowed && valid.length > 0) {
+      waitMs = US_LIMIT_WINDOW_MS - (now - valid[0]);
+    }
+
+    const hours = Math.floor(waitMs / (1000 * 60 * 60));
+    const minutes = Math.ceil((waitMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    return { allowed, count, remaining, waitMs, hours, minutes, user };
+  }
+
+  function recordUsSearch(username) {
+    const user = (username || getLoggedInIgUser() || 'guest').toLowerCase().replace(/[^a-z0-9_.]/g, '');
+    const storageKey = `movvefind_us_limit_${user}`;
+    let timestamps = [];
+    try {
+      timestamps = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      if (!Array.isArray(timestamps)) timestamps = [];
+    } catch {
+      timestamps = [];
+    }
+    const now = Date.now();
+    const valid = timestamps.filter(t => (now - t) < US_LIMIT_WINDOW_MS);
+    valid.push(now);
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(valid));
+    } catch {}
+    updateUsQuotaUI();
+  }
+
+  function updateUsQuotaUI() {
+    const banner = document.getElementById('us-quota-info-banner');
+    const statusText = document.getElementById('us-quota-status-text');
+    if (!banner) return;
+
+    if (state.country === 'US') {
+      const quota = getUsQuotaInfo(getLoggedInIgUser());
+      banner.style.display = 'flex';
+      if (statusText) {
+        statusText.textContent = `${quota.remaining}/2 disponíveis nas últimas 5h`;
+      }
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  function showUsLimitModal(quota) {
+    const modal = document.getElementById('us-limit-modal');
+    const timerText = document.getElementById('us-limit-timer-text');
+    const userText = document.getElementById('us-limit-user-text');
+    if (!modal) {
+      alert(`Limite atingido para os EUA! Máximo de 2 pesquisas a cada 5 horas. Próxima busca liberada em ${quota.hours}h ${quota.minutes}m.`);
+      return;
+    }
+    if (timerText) timerText.textContent = `${quota.hours}h ${quota.minutes}min`;
+    if (userText) userText.textContent = getLoggedInIgUser() || '@usuario';
+    modal.hidden = false;
+  }
+
   async function executeLeadSearch(isAppend = false) {
+    // 1. Validar autenticação do Instagram
+    const currentIgUser = getLoggedInIgUser();
+    if (!currentIgUser) {
+      openIgLoginModal();
+      return;
+    }
+
+    // 2. Validar que não é país todo ou todos os nichos
+    if (!state.city || /pa[ií]s\s*todo/i.test(state.city)) {
+      showToast('Na versão gratuita, informe uma cidade específica (ex: Curitiba ou Miami).');
+      return;
+    }
+    if (!state.niche || /todos\s*(os)?\s*nichos/i.test(state.niche)) {
+      showToast('Na versão gratuita, informe um nicho específico (ex: Oficina Mecânica ou Handyman).');
+      return;
+    }
+
+    // 3. Validar limite de 2 buscas a cada 5h nos Estados Unidos
+    if (state.country === 'US') {
+      const quota = getUsQuotaInfo(currentIgUser);
+      if (!quota.allowed) {
+        showUsLimitModal(quota);
+        return;
+      }
+    }
+
     const statusBanner = document.getElementById('status-banner-text');
     const submitBtn = document.getElementById('search-submit-btn');
     const loadMoreBtn = document.getElementById('btn-load-more');
 
     if (submitBtn) {
       submitBtn.disabled = true;
-      submitBtn.textContent = isAppend ? 'Aprofundando varredura...' : 'Buscando empresas sem site...';
+      submitBtn.textContent = 'Buscando empresas sem site (10 leads)...';
     }
 
     if (loadMoreBtn) {
-      loadMoreBtn.disabled = true;
-      loadMoreBtn.textContent = 'Buscando novos bairros e cidades...';
+      loadMoreBtn.style.display = 'none';
     }
 
-    setLoadingScreen(true, isAppend ? `Aprofundando busca: procurando novos comércios em ${state.city}...` : `Iniciando pesquisa: "${state.niche}" em ${state.city}...`, 25);
+    setLoadingScreen(true, `Buscando 10 empresas sem site: "${state.niche}" em ${state.city}...`, 35);
 
     const stepTimer1 = setTimeout(() => {
-      setLoadingScreen(true, `Varrendo bairros e comércios no Google Maps sem site...`, 60);
-    }, 1000);
+      setLoadingScreen(true, `Consultando Google Maps e filtrando empresas reais sem site...`, 70);
+    }, 800);
 
     const stepTimer2 = setTimeout(() => {
-      setLoadingScreen(true, `Validando contatos e descartando quem tem site...`, 85);
-    }, 2200);
+      setLoadingScreen(true, `Validando contatos e organizando 10 leads...`, 90);
+    }, 1800);
 
     try {
       let data = null;
@@ -808,10 +898,10 @@
           const cleanBase = activeBase ? activeBase.replace(/\/$/, '') : '';
           const searchPath = cleanBase ? `${cleanBase}/api/search` : '/api/search';
           const seed = Math.floor(Math.random() * 1000000);
-          const target = isAppend ? 45 : 40;
+          const target = 10; // Fixo em 10 leads
           const url = `${searchPath}?country=${encodeURIComponent(state.country)}&city=${encodeURIComponent(state.city)}&niche=${encodeURIComponent(state.niche)}&target=${target}&seed=${seed}`;
           const abortCtrl = new AbortController();
-          const netTimer = setTimeout(() => abortCtrl.abort(), 25000);
+          const netTimer = setTimeout(() => abortCtrl.abort(), 20000);
           const res = await fetch(url, { signal: abortCtrl.signal });
           clearTimeout(netTimer);
           if (res.ok) {
@@ -847,28 +937,17 @@
         return copy;
       });
 
-      if (isAppend) {
-        const existingKeys = new Set(state.leads.map(l => (l.rawPhoneDigits || l.name).toLowerCase().replace(/[^a-z0-9]/g, '')));
-        const freshLeads = incomingLeads.filter(l => {
-          const k = (l.rawPhoneDigits || l.name).toLowerCase().replace(/[^a-z0-9]/g, '');
-          return k && !existingKeys.has(k);
-        });
-        state.leads = [...state.leads, ...freshLeads];
-      } else {
-        state.leads = incomingLeads;
-      }
-
+      // Limitar estritamente a 10 leads por pesquisa na versão gratuita
+      state.leads = incomingLeads.slice(0, 10);
       renderLeadsTable();
 
+      // Se for busca nos EUA bem-sucedida, registrar no contador do usuário
+      if (state.country === 'US') {
+        recordUsSearch(currentIgUser);
+      }
+
       if (loadMoreBtn) {
-        loadMoreBtn.style.display = state.leads.length > 0 ? 'inline-block' : 'none';
-        loadMoreBtn.disabled = false;
-        loadMoreBtn.innerHTML = `
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" style="margin-right: 0.4rem; vertical-align: middle;">
-            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-          </svg>
-          ⚡ Aprofundar Busca &amp; Carregar Mais Empresas (+40 Novas)
-        `;
+        loadMoreBtn.style.display = 'none';
       }
 
       if (statusBanner) {
@@ -876,9 +955,9 @@
         const engineLabel = engineName === 'local'
           ? '🟢 Servidor Local Ativo'
           : engineName === 'cloud'
-            ? '🚀 Motor Google Maps na Nuvem (Vercel/Render)'
+            ? '🚀 Motor Google Maps na Nuvem (Vercel)'
             : '🌐 Modo Navegador Autônomo';
-        statusBanner.textContent = `[${engineLabel}] Encontradas ${state.leads.length} empresas REAIS SEM SITE em ${state.city} (${withInsta} com Instagram ativo).`;
+        statusBanner.textContent = `[${engineLabel}] Versão Gratuita: ${state.leads.length} empresas REAIS SEM SITE em ${state.city} (${withInsta} com Instagram).`;
       }
     } catch {
       if (statusBanner) {
@@ -890,7 +969,7 @@
       setTimeout(() => setLoadingScreen(false, '', 0), 180);
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Buscar Empresas Sem Site Agora';
+        submitBtn.textContent = 'Buscar Empresas Sem Site Agora (10 Leads)';
       }
     }
   }
@@ -1005,18 +1084,8 @@
         const preset = chip.getAttribute('data-preset');
         if (!preset) return;
 
-        if (preset.includes('País Todo')) {
-          const val = 'País Todo (Todas as Regiões)';
-          if (cityInput) cityInput.value = val;
-          state.city = val;
-        } else if (preset.includes('Todos os Nichos')) {
-          const val = 'Todos os Nichos (Alta Demanda)';
-          if (nicheInput) nicheInput.value = val;
-          state.niche = val;
-        } else {
-          if (nicheInput) nicheInput.value = preset;
-          state.niche = preset;
-        }
+        if (nicheInput) nicheInput.value = preset;
+        state.niche = preset;
 
         if (cityInput && cityInput.value.trim()) {
           state.city = cityInput.value.trim();
@@ -1030,7 +1099,14 @@
         e.preventDefault();
         const cVal = cityInput ? cityInput.value.trim() : '';
         const nVal = nicheInput ? nicheInput.value.trim() : '';
-        if (!cVal || !nVal) return;
+        if (!cVal || /pa[ií]s\s*todo/i.test(cVal)) {
+          showToast('Na versão gratuita, informe uma cidade específica (ex: Curitiba ou Miami).');
+          return;
+        }
+        if (!nVal || /todos\s*(os)?\s*nichos/i.test(nVal)) {
+          showToast('Na versão gratuita, informe um nicho específico (ex: Oficina Mecânica ou Handyman).');
+          return;
+        }
         state.city = cVal;
         state.niche = nVal;
         executeLeadSearch();
@@ -1195,49 +1271,115 @@
       });
     }
 
-    // Password Gate Controller ("mf7")
+    // --- Instagram Auth & Gatekeeper Controller ---
     const authOverlay = document.getElementById('auth-gate-overlay');
-    const authForm = document.getElementById('auth-gate-form');
-    const authInput = document.getElementById('auth-gate-password');
-    const authError = document.getElementById('auth-gate-error');
-    const AUTH_KEY = 'movvefind_auth_mf7';
+    const igForm = document.getElementById('ig-login-form');
+    const igInput = document.getElementById('ig-username-input');
+    const igError = document.getElementById('ig-step1-error');
+    const igStep1 = document.getElementById('ig-login-step1');
+    const igStep2 = document.getElementById('ig-login-step2');
+    const igTargetDisplay = document.getElementById('ig-target-user-display');
+    const btnConfirmFollow = document.getElementById('btn-confirm-follow');
+    const btnBackToStep1 = document.getElementById('btn-back-to-step1');
+    const btnIgLogout = document.getElementById('btn-ig-logout');
+
+    let pendingIgHandle = '';
 
     window.executeLeadSearch = executeLeadSearch;
-
-    function checkAuth() {
-      if (sessionStorage.getItem(AUTH_KEY) === 'granted') {
-        if (authOverlay) authOverlay.style.display = 'none';
-        executeLeadSearch();
-        return true;
+    window.handleIgStep1 = (e) => {
+      if (e && e.preventDefault) e.preventDefault();
+      const raw = igInput ? igInput.value.trim() : '';
+      const clean = raw.replace(/^@+/, '').trim();
+      if (!clean) {
+        if (igError) igError.style.display = 'block';
+        if (igInput) igInput.focus();
+        return false;
       }
-      if (authOverlay) {
-        authOverlay.style.display = 'flex';
-        if (authInput) setTimeout(() => authInput.focus(), 100);
-      }
+      pendingIgHandle = `@${clean}`;
+      if (igTargetDisplay) igTargetDisplay.textContent = pendingIgHandle;
+      if (igStep1) igStep1.style.display = 'none';
+      if (igStep2) igStep2.style.display = 'block';
       return false;
+    };
+
+    window.handleConfirmFollow = () => {
+      const userToSave = pendingIgHandle || (igInput ? `@${igInput.value.trim().replace(/^@+/, '')}` : '@visitante');
+      localStorage.setItem(AUTH_USER_KEY, userToSave);
+      localStorage.setItem(AUTH_GRANTED_KEY, 'true');
+      if (authOverlay) authOverlay.style.display = 'none';
+      updateIgUserUI();
+      updateUsQuotaUI();
+      showToast(`🎉 Acesso liberado para ${userToSave}! Bem-vindo ao MovveFind.`);
+      executeLeadSearch();
+    };
+
+    window.backToIgStep1 = () => {
+      if (igStep2) igStep2.style.display = 'none';
+      if (igStep1) igStep1.style.display = 'block';
+      if (igInput) setTimeout(() => igInput.focus(), 100);
+    };
+
+    if (igForm) {
+      igForm.addEventListener('submit', window.handleIgStep1);
+    }
+    if (btnConfirmFollow) {
+      btnConfirmFollow.addEventListener('click', window.handleConfirmFollow);
+    }
+    if (btnBackToStep1) {
+      btnBackToStep1.addEventListener('click', window.backToIgStep1);
+    }
+    if (btnIgLogout) {
+      btnIgLogout.addEventListener('click', () => {
+        localStorage.removeItem(AUTH_GRANTED_KEY);
+        updateIgUserUI();
+        openIgLoginModal();
+        showToast('Você saiu da sua conta.');
+      });
     }
 
-    if (authForm) {
-      authForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const pwd = (authInput ? authInput.value : '').trim().toLowerCase();
-        if (pwd === 'mf7') {
-          sessionStorage.setItem(AUTH_KEY, 'granted');
-          if (authError) authError.style.display = 'none';
-          if (authOverlay) authOverlay.style.display = 'none';
-          showToast('Acesso autorizado! Bem-vindo.');
-          executeLeadSearch();
-        } else {
-          if (authError) authError.style.display = 'block';
-          if (authInput) {
-            authInput.value = '';
-            authInput.focus();
-          }
+    // Modal US Limit buttons
+    const usLimitModal = document.getElementById('us-limit-modal');
+    const btnCloseUsLimit = document.getElementById('btn-close-us-limit');
+    const btnSwitchToBr = document.getElementById('btn-switch-to-br');
+
+    if (btnCloseUsLimit && usLimitModal) {
+      btnCloseUsLimit.addEventListener('click', () => {
+        usLimitModal.hidden = true;
+      });
+    }
+
+    if (btnSwitchToBr && usLimitModal) {
+      btnSwitchToBr.addEventListener('click', () => {
+        usLimitModal.hidden = true;
+        const brRadio = document.getElementById('country-br');
+        if (brRadio) {
+          brRadio.checked = true;
+          brRadio.dispatchEvent(new Event('change', { bubbles: true }));
         }
       });
     }
 
-    checkAuth();
+    // Hook country radio changes to update US quota banner
+    countryRadios.forEach(r => {
+      r.addEventListener('change', () => {
+        updateUsQuotaUI();
+      });
+    });
+
+    // Check initial auth state
+    function checkInitialAuth() {
+      updateIgUserUI();
+      updateUsQuotaUI();
+      const user = getLoggedInIgUser();
+      if (user) {
+        if (authOverlay) authOverlay.style.display = 'none';
+        executeLeadSearch();
+      } else {
+        openIgLoginModal();
+      }
+    }
+
+    checkInitialAuth();
   }
 
   if (document.readyState === 'loading') {

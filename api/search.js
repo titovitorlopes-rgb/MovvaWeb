@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   const country = (req.query.country || 'BR').toUpperCase();
   const city = (req.query.city || 'Curitiba, PR').trim();
   const niche = (req.query.niche || 'Oficina Mecânica').trim();
-  const target = Math.min(60, Math.max(25, parseInt(req.query.target, 10) || 40));
+  const target = 10;
 
   try {
     const result = await scrapeLeads({ country, city, niche, target });
