@@ -16,25 +16,54 @@
   <!-- Password Gate (mf7) -->
   <div id="auth-gate-overlay" style="position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 999999; background: #0f172a; display: flex; align-items: center; justify-content: center; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;">
     <div style="max-width: 420px; width: 90%; background: #1e293b; border-radius: 16px; padding: 2.5rem 2rem; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7); text-align: center; color: #f8fafc;">
-      <img src="/logo-transparent.png" alt="Logo MovveFind" style="width: 80px; height: auto; margin-bottom: 1.25rem;">
-      <h2 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: #ffffff;">Acesso Protegido</h2>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 1.25rem;">
+        <img src="data:image/png;base64,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" alt="Movva" style="width: 44px; height: 44px; object-fit: contain;">
+        <span style="font-size: 1.6rem; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">Movve<span style="color: #3b82f6;">Find</span></span>
+      </div>
+      <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.4rem; color: #ffffff;">Acesso Protegido</h2>
       <p style="font-size: 0.875rem; color: #94a3b8; margin-bottom: 1.5rem; line-height: 1.5;">Digite a senha de autorização para liberar o buscador de empresas:</p>
-      <form id="auth-gate-form">
+      <form id="auth-gate-form" onsubmit="return handleAuthSubmit(event);">
         <div style="margin-bottom: 1.25rem;">
-          <input type="password" id="auth-gate-password" placeholder="Digite a senha..." autofocus required
-            style="width: 100%; box-sizing: border-box; padding: 0.85rem 1rem; border-radius: 10px; border: 1.5px solid #475569; background: #0f172a; color: #ffffff; font-size: 1.15rem; text-align: center; letter-spacing: 3px; outline: none;">
-          <div id="auth-gate-error" style="color: #f87171; font-size: 0.85rem; margin-top: 0.6rem; display: none; font-weight: 500;">Senha incorreta. Tente novamente.</div>
+          <input type="password" id="auth-gate-password" placeholder="Digite a senha..." autofocus required autocomplete="current-password"
+            style="width: 100%; box-sizing: border-box; padding: 0.85rem 1rem; border-radius: 10px; border: 1.5px solid #475569; background: #0f172a; color: #ffffff; font-size: 1.2rem; text-align: center; letter-spacing: 4px; outline: none;">
+          <div id="auth-gate-error" style="color: #f87171; font-size: 0.85rem; margin-top: 0.6rem; display: none; font-weight: 600;">Senha incorreta. Digite mf7</div>
         </div>
-        <button type="submit" style="width: 100%; padding: 0.85rem; border-radius: 10px; border: none; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
+        <button type="submit" id="auth-gate-btn" onclick="handleAuthSubmit(event);" style="width: 100%; padding: 0.85rem; border-radius: 10px; border: none; background: #2563eb; color: #ffffff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s;">
           Entrar no Sistema
         </button>
       </form>
     </div>
   </div>
 
+  <script>
+    // Verificação de autenticação direta e à prova de falhas
+    function handleAuthSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var input = document.getElementById('auth-gate-password');
+      var err = document.getElementById('auth-gate-error');
+      var overlay = document.getElementById('auth-gate-overlay');
+      var val = input ? input.value.trim().toLowerCase() : '';
+      if (val === 'mf7') {
+        sessionStorage.setItem('movvefind_auth_mf7', 'granted');
+        if (overlay) overlay.style.display = 'none';
+        if (window.executeLeadSearch) window.executeLeadSearch();
+        return false;
+      } else {
+        if (err) err.style.display = 'block';
+        if (input) { input.value = ''; input.focus(); }
+        return false;
+      }
+    }
+    // Liberar automaticamente se já tiver entrado nesta sessão
+    if (sessionStorage.getItem('movvefind_auth_mf7') === 'granted') {
+      var ov = document.getElementById('auth-gate-overlay');
+      if (ov) ov.style.display = 'none';
+    }
+  </script>
+
   <div id="loading-overlay" class="loading-overlay" role="status" aria-live="polite" hidden>
     <div class="loading-card">
-      <img src="/logo-transparent.png" alt="Logo MovveFind" class="loading-logo" width="90" height="39">
+      <img src="data:image/png;base64,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" alt="Logo MovveFind" class="loading-logo" width="60" height="60">
       <h2 class="loading-title">MovveFind Buscando Clientes...</h2>
       <p id="loading-step-text" class="loading-step">Varrendo empresas reais no Google Maps sem site oficial...</p>
       <div class="loading-bar-track">
@@ -46,7 +75,7 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-group">
-        <img src="/logo-transparent.png" alt="MovveFind Logo" class="brand-logo" width="56" height="24">
+        <img src="data:image/png;base64,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" alt="MovveFind Logo" class="brand-logo" width="38" height="38" style="object-fit: contain; border-radius: 8px;">
         <div class="brand-title-wrap">
           <h1>Movve<span class="brand-accent">Find</span></h1>
           <p class="brand-subtitle">Empresas Reais Sem Site • Telefone para Copiar • Instagram • Sempre Ativas</p>

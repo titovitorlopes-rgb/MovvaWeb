@@ -1202,6 +1202,8 @@
     const authError = document.getElementById('auth-gate-error');
     const AUTH_KEY = 'movvefind_auth_mf7';
 
+    window.executeLeadSearch = executeLeadSearch;
+
     function checkAuth() {
       if (sessionStorage.getItem(AUTH_KEY) === 'granted') {
         if (authOverlay) authOverlay.style.display = 'none';
@@ -1218,7 +1220,7 @@
     if (authForm) {
       authForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const pwd = (authInput ? authInput.value : '').trim();
+        const pwd = (authInput ? authInput.value : '').trim().toLowerCase();
         if (pwd === 'mf7') {
           sessionStorage.setItem(AUTH_KEY, 'granted');
           if (authError) authError.style.display = 'none';
